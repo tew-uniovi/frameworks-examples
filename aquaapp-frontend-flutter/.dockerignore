@@ -1,0 +1,9 @@
+build
+.dart_tool
+.idea
+.vscode
+img
+test
+README.md
+Dockerfile
+.dockerignore

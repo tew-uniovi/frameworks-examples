@@ -1,0 +1,47 @@
+# Variantes del cliente de aquaapp con distintos frameworks.
+#
+# Este compose NO levanta auth ni backend: se conecta a la red "aquaapp-network"
+# (declarada "external"), que crea el compose de YYyy-tew-ZZ-UOXXXXX y donde
+# ya viven los servicios `auth` y `backend`. Hay que arrancar ESE stack primero:
+#
+#   cd ../YYyy-tew-ZZ-UOXXXXX && docker compose up -d --build
+#   cd ../frameworks-examples   && docker compose up -d --build
+#
+# Si la red tuviera otro nombre, exporta AQUAAPP_NETWORK o ponlo en un fichero
+# .env junto a este compose (ver .env.example).
+#
+# Cada variante sirve la SPA bajo /aquaapp/ y hace de proxy inverso de
+# /api/* -> backend y /auth/* -> auth (mismo origen, sin CORS), igual que el
+# server.mjs del cliente original.
+name: aquaapp-frameworks
+
+x-proxy-env: &proxy-env
+  BACKEND_URL: ${BACKEND_URL:-http://backend:8080}
+  AUTH_URL: ${AUTH_URL:-http://auth:9000}
+
+services:
+  angular:
+    build: ./aquaapp-frontend-angular
+    environment: *proxy-env
+    ports:
+      - "${ANGULAR_PORT:-8081}:80"
+    networks: [aquaapp]
+
+  react:
+    build: ./aquaapp-frontend-react
+    environment: *proxy-env
+    ports:
+      - "${REACT_PORT:-8082}:80"
+    networks: [aquaapp]
+
+  flutter:
+    build: ./aquaapp-frontend-flutter
+    environment: *proxy-env
+    ports:
+      - "${FLUTTER_PORT:-8083}:80"
+    networks: [aquaapp]
+
+networks:
+  aquaapp:
+    external: true
+    name: ${AQUAAPP_NETWORK:-aquaapp-network}

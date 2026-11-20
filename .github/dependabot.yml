@@ -1,0 +1,145 @@
+# Actualizaciones el día 1 de cada mes a las 03:00 (hora de Madrid), asignadas a augustocristian y etiquetadas por
+# framework (angular, react, flutter) y lenguaje (ts, js, dart, docker).
+# Las etiquetas deben existir en el repositorio: Dependabot no las crea.
+#
+# Sin conflictos entre PRs: las subidas menores y de parche se agrupan en un
+# solo PR por (ecosistema, carpeta), asi no compiten por el mismo lockfile o
+# Dockerfile. Las mayores van en PR propio. Los Dockerfile fijan versiones
+# concretas (no `nginx:alpine`) para que Dependabot pueda actualizarlas.
+version: 2
+
+updates:
+  # --- Angular ---------------------------------------------------------------
+  - package-ecosystem: "npm"
+    directory: "/aquaapp-frontend-angular"
+    schedule:
+      interval: "monthly"
+      time: "03:00"
+      timezone: "Europe/Madrid"
+    rebase-strategy: "auto"
+    assignees: ["augustocristian"]
+    labels: ["angular", "ts", "js", "dependencies"]
+    groups:
+      angular:
+        patterns: ["@angular/*", "@angular-devkit/*", "@schematics/*"]
+        update-types: ["minor", "patch"]
+      otras-dependencias:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
+    ignore:
+      # Angular 22 no compila con TypeScript 7.
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+  - package-ecosystem: "docker"
+    directory: "/aquaapp-frontend-angular"
+    schedule:
+      interval: "monthly"
+      time: "03:00"
+      timezone: "Europe/Madrid"
+    rebase-strategy: "auto"
+    assignees: ["augustocristian"]
+    labels: ["angular", "docker", "dependencies"]
+    groups:
+      imagenes-docker:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
+
+  # --- React -----------------------------------------------------------------
+  - package-ecosystem: "npm"
+    directory: "/aquaapp-frontend-react"
+    schedule:
+      interval: "monthly"
+      time: "03:00"
+      timezone: "Europe/Madrid"
+    rebase-strategy: "auto"
+    assignees: ["augustocristian"]
+    labels: ["react", "ts", "js", "dependencies"]
+    groups:
+      mui:
+        patterns: ["@mui/*", "@emotion/*"]
+        update-types: ["minor", "patch"]
+      otras-dependencias:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
+  - package-ecosystem: "docker"
+    directory: "/aquaapp-frontend-react"
+    schedule:
+      interval: "monthly"
+      time: "03:00"
+      timezone: "Europe/Madrid"
+    rebase-strategy: "auto"
+    assignees: ["augustocristian"]
+    labels: ["react", "docker", "dependencies"]
+    groups:
+      imagenes-docker:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
+
+  # --- Flutter ---------------------------------------------------------------
+  - package-ecosystem: "pub"
+    directory: "/aquaapp-frontend-flutter"
+    schedule:
+      interval: "monthly"
+      time: "03:00"
+      timezone: "Europe/Madrid"
+    rebase-strategy: "auto"
+    assignees: ["augustocristian"]
+    labels: ["flutter", "dart", "dependencies"]
+    groups:
+      dependencias-pub:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
+    ignore:
+      # Ambas dependen del SDK: quitar estas reglas al subir de Flutter.
+      # web >= 1.1.2 exige Dart ^3.13 (el proyecto usa 3.12).
+      - dependency-name: "web"
+        versions: [">=1.1.2"]
+      # flutter_localizations fija intl a 0.20.2.
+      - dependency-name: "intl"
+        versions: [">0.20.2"]
+  - package-ecosystem: "docker"
+    directory: "/aquaapp-frontend-flutter"
+    schedule:
+      interval: "monthly"
+      time: "03:00"
+      timezone: "Europe/Madrid"
+    rebase-strategy: "auto"
+    assignees: ["augustocristian"]
+    labels: ["flutter", "docker", "dependencies"]
+    groups:
+      imagenes-docker:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
+
+  # --- Pruebas de sistema (Playwright) ----------------------------------------
+  - package-ecosystem: "npm"
+    directory: "/E2E"
+    schedule:
+      interval: "monthly"
+      time: "03:00"
+      timezone: "Europe/Madrid"
+    rebase-strategy: "auto"
+    assignees: ["augustocristian"]
+    labels: ["e2e", "ts", "js", "dependencies"]
+    groups:
+      playwright:
+        patterns: ["@playwright/*", "playwright*"]
+        update-types: ["minor", "patch"]
+      otras-dependencias:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
+
+  # --- Workflows de GitHub Actions ---------------------------------------------
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+      time: "03:00"
+      timezone: "Europe/Madrid"
+    rebase-strategy: "auto"
+    assignees: ["augustocristian"]
+    labels: ["github-actions", "dependencies"]
+    groups:
+      acciones:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]

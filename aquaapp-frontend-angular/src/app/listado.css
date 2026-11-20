@@ -1,0 +1,59 @@
+.encabezado {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.titulo {
+  margin: 0;
+  font: var(--mat-sys-headline-small);
+}
+
+.actualizado {
+  margin: 4px 0 0;
+  color: var(--mat-sys-on-surface-variant);
+  font: var(--mat-sys-body-medium);
+}
+
+.contenido-tarjeta {
+  padding-top: 16px;
+}
+
+.filtro {
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.tabla-contenedor {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+}
+
+.acciones {
+  width: 1%;
+  white-space: nowrap;
+}
+
+.sin-datos td {
+  padding: 16px;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.cargando {
+  display: flex;
+  justify-content: center;
+  padding: 32px;
+}
+
+@media (max-width: 599px) {
+  th.mat-mdc-header-cell,
+  td.mat-mdc-cell {
+    padding: 0 8px;
+  }
+}

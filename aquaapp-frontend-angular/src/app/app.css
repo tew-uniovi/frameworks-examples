@@ -1,0 +1,30 @@
+.contenido {
+  flex: 1 1 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  align-content: flex-start;
+  gap: 16px;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+main {
+  flex: 1 1 520px;
+  min-width: 0;
+}
+
+aside {
+  flex: 0 0 264px;
+  max-width: 100%;
+}
+
+footer {
+  padding: 16px;
+  text-align: center;
+  color: var(--mat-sys-on-surface-variant);
+  font: var(--mat-sys-body-medium);
+}

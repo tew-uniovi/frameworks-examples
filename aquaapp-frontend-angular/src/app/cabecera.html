@@ -1,0 +1,89 @@
+<mat-toolbar class="barra">
+  <a class="marca" href="." aria-label="aquaapp">
+    <img src="img/aquaapp-logo-horizontal.svg" alt="aquaapp" class="logo-cabecera" fetchpriority="high" />
+  </a>
+
+  @if (sesion.haySesion()) {
+    <button
+      mat-button
+      id="menuEmbalses"
+      data-testid="menu-embalses"
+      [matMenuTriggerFor]="menuEmbalses"
+      [attr.aria-label]="i18n.t('nav.embalses')"
+      [matTooltip]="i18n.t('nav.embalses')"
+      [matTooltipDisabled]="!compacto()"
+    >
+      <mat-icon>water_drop</mat-icon>
+      <span class="texto-menu">{{ i18n.t('nav.embalses') }}</span>
+      <mat-icon iconPositionEnd class="texto-menu">arrow_drop_down</mat-icon>
+    </button>
+    <mat-menu #menuEmbalses="matMenu">
+      <button mat-menu-item id="btnListado" data-testid="menu-listado" type="button" (click)="vista.listar()">
+        <mat-icon>list</mat-icon>
+        <span>{{ i18n.t('nav.listado') }}</span>
+      </button>
+      <button mat-menu-item id="btnAlta" data-testid="menu-nuevo" type="button" (click)="vista.mostrarFormulario()">
+        <mat-icon>add</mat-icon>
+        <span>{{ i18n.t('nav.nuevo') }}</span>
+      </button>
+    </mat-menu>
+  }
+
+  <span class="relleno"></span>
+
+  <button
+    mat-button
+    id="menuSesion"
+    data-testid="menu-sesion"
+    [matMenuTriggerFor]="menuSesion"
+    [attr.aria-label]="saludo()"
+    [matTooltip]="saludo()"
+    [matTooltipDisabled]="!compacto()"
+  >
+    <mat-icon>account_circle</mat-icon>
+    <span id="saludo" class="texto-menu">{{ saludo() }}</span>
+    <mat-icon iconPositionEnd class="texto-menu">arrow_drop_down</mat-icon>
+  </button>
+  <mat-menu #menuSesion="matMenu" xPosition="before">
+    @if (sesion.haySesion()) {
+      <button mat-menu-item id="btnLogout" data-testid="menu-logout" type="button" (click)="vista.cerrarSesion()">
+        <mat-icon>logout</mat-icon>
+        <span>{{ i18n.t('nav.salir') }}</span>
+      </button>
+    } @else {
+      <button mat-menu-item id="btnMenuLogin" data-testid="menu-login" type="button" (click)="vista.abrirModal('login')">
+        <mat-icon>login</mat-icon>
+        <span>{{ i18n.t('login.title') }}</span>
+      </button>
+      <button
+        mat-menu-item
+        id="btnMenuRegistro"
+        data-testid="menu-registro"
+        type="button"
+        (click)="vista.abrirModal('registro')"
+      >
+        <mat-icon>person_add</mat-icon>
+        <span>{{ i18n.t('login.registrate') }}</span>
+      </button>
+    }
+  </mat-menu>
+
+  <button
+    mat-button
+    id="menuIdioma"
+    [matMenuTriggerFor]="menuIdioma"
+    [attr.aria-label]="i18n.t('nav.idioma')"
+    [matTooltip]="i18n.t('nav.idioma')"
+  >
+    <mat-icon>translate</mat-icon>
+    <span id="idiomaActivo">{{ i18n.idioma().toUpperCase() }}</span>
+  </button>
+  <mat-menu #menuIdioma="matMenu" xPosition="before">
+    <button mat-menu-item type="button" data-idioma="es" (click)="cambiarIdioma('es')">
+      ES · Español
+    </button>
+    <button mat-menu-item type="button" data-idioma="en" (click)="cambiarIdioma('en')">
+      EN · English
+    </button>
+  </mat-menu>
+</mat-toolbar>
