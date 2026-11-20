@@ -1,32 +1,26 @@
-.cabecera-dialogo {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-right: 8px;
-}
-
 .formulario {
   display: flex;
   flex-direction: column;
   padding-top: 8px;
 }
 
-.acciones {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
 .error {
-  margin: 0 0 12px;
+  margin: 0 0 8px;
   color: var(--mat-sys-error);
+  font: var(--mat-sys-body-medium);
 }
 
+/* El cambio login <-> registro va a la izquierda de la fila de acciones */
 .cambio {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  margin-right: auto;
+}
+
+mat-dialog-actions {
   flex-wrap: wrap;
-  margin: 16px 0 0;
-  color: var(--mat-sys-on-surface-variant);
+  gap: 8px;
+}
+
+mat-progress-spinner {
+  display: inline-block;
+  vertical-align: middle;
 }

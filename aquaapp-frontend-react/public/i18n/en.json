@@ -48,5 +48,9 @@
   "tabla.editar": "Edit",
   "tabla.eliminar": "Delete",
   "error.sinPermiso": "You do not have permission to perform this action",
-  "error.servidor": "The operation could not be completed. Please try again."
+  "error.servidor": "The operation could not be completed. Please try again.",
+  "comun.cerrar": "Close",
+  "comun.cancelar": "Cancel",
+  "nav.idioma": "Language",
+  "app.descripcion": "Water resources management of the Principality of Asturias"
 }

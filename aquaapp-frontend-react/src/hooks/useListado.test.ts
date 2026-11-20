@@ -17,6 +17,7 @@ describe('useListado', () => {
     expect(result.current.ultimaPagina).toBe(2)
     act(() => result.current.irAPagina(1))
     expect(result.current.pagina).toBe(1)
+    expect(result.current.total).toBe(12)
     expect(result.current.visibles[0].id).toBe(6)
   })
 

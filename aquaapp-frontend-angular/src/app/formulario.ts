@@ -7,6 +7,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -33,6 +34,7 @@ function nivelNoSuperaCapacidad(nivel: AbstractControl): ValidationErrors | null
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ReactiveFormsModule,
+    MatCardModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
@@ -72,6 +74,10 @@ export class Formulario {
       this.form.controls.nivelActualHm3.updateValueAndValidity(),
     );
     afterNextRender(() => this.vista.marcarListo());
+  }
+
+  protected cancelar(): void {
+    this.vista.listar();
   }
 
   protected guardar(): void {

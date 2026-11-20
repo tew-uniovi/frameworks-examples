@@ -1,85 +1,106 @@
-<p class="actualizado">
-  <span>{{ i18n.t('listado.actualizado') }}</span>
-  <span id="fechaActualizado">
-    @if (embalses.actualizado(); as fecha) {
-      {{ i18n.fecha(fecha) }}
-    }
-  </span>
-</p>
-
-<mat-form-field appearance="outline" class="filtro" subscriptSizing="dynamic">
-  <mat-label>{{ i18n.t('listado.filtroPlaceholder') }}</mat-label>
-  <mat-icon matIconPrefix>search</mat-icon>
-  <input
-    matInput
-    type="text"
-    id="filtro-nombre"
-    [value]="embalses.filtro()"
-    (input)="filtrar($event)"
-  />
-</mat-form-field>
-
-@if (!embalses.cargado()) {
-  <div class="cargando"><mat-progress-spinner mode="indeterminate" diameter="32" /></div>
-} @else {
-  <div class="tabla-contenedor">
-    <table mat-table [dataSource]="embalses.paginaActual()" id="tabla-embalses">
-      <ng-container matColumnDef="id">
-        <th mat-header-cell *matHeaderCellDef>{{ i18n.t('tabla.id') }}</th>
-        <td mat-cell *matCellDef="let e">{{ e.id }}</td>
-      </ng-container>
-      <ng-container matColumnDef="nombre">
-        <th mat-header-cell *matHeaderCellDef>{{ i18n.t('tabla.nombre') }}</th>
-        <td mat-cell *matCellDef="let e">{{ e.nombre }}</td>
-      </ng-container>
-      <ng-container matColumnDef="capacidad">
-        <th mat-header-cell *matHeaderCellDef>{{ i18n.t('tabla.capacidad') }}</th>
-        <td mat-cell *matCellDef="let e">{{ i18n.numero(e.capacidadHm3) }}</td>
-      </ng-container>
-      <ng-container matColumnDef="nivel">
-        <th mat-header-cell *matHeaderCellDef>{{ i18n.t('tabla.nivel') }}</th>
-        <td mat-cell *matCellDef="let e">{{ i18n.numero(e.nivelActualHm3) }}</td>
-      </ng-container>
-      <ng-container matColumnDef="acciones">
-        <th mat-header-cell *matHeaderCellDef>{{ i18n.t('tabla.acciones') }}</th>
-        <td mat-cell *matCellDef="let e" class="acciones">
-          <button
-            mat-icon-button
-            type="button"
-            class="btn-editar"
-            [matTooltip]="i18n.t('tabla.editar')"
-            [attr.aria-label]="i18n.t('tabla.editar')"
-            (click)="editar(e)"
-          >
-            <mat-icon>edit</mat-icon>
-          </button>
-          <button
-            mat-icon-button
-            type="button"
-            class="btn-eliminar"
-            [matTooltip]="i18n.t('tabla.eliminar')"
-            [attr.aria-label]="i18n.t('tabla.eliminar')"
-            (click)="eliminar(e)"
-          >
-            <mat-icon>delete</mat-icon>
-          </button>
-        </td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="columnas"></tr>
-      <tr mat-row *matRowDef="let fila; columns: columnas"></tr>
-      <tr class="mat-row sin-datos" *matNoDataRow>
-        <td class="mat-cell" [attr.colspan]="columnas.length">{{ i18n.t('listado.vacio') }}</td>
-      </tr>
-    </table>
+<div class="encabezado">
+  <div>
+    <h1 class="titulo">{{ i18n.t('nav.embalses') }}</h1>
+    <p class="actualizado">
+      <span>{{ i18n.t('listado.actualizado') }}</span>
+      <span id="fechaActualizado">
+        @if (embalses.actualizado(); as fecha) {
+          {{ i18n.fecha(fecha) }}
+        }
+      </span>
+    </p>
   </div>
+  <button mat-flat-button id="btnNuevo" type="button" (click)="nuevo()">
+    <mat-icon>add</mat-icon>
+    {{ i18n.t('nav.nuevo') }}
+  </button>
+</div>
 
-  <mat-paginator
-    id="paginador"
-    [length]="embalses.filtrados().length"
-    [pageSize]="embalses.porPagina"
-    [pageIndex]="embalses.pagina()"
-    [hidePageSize]="true"
-    (page)="cambiarPagina($event)"
-  />
-}
+<mat-card appearance="outlined">
+  <mat-card-content class="contenido-tarjeta">
+    <mat-form-field appearance="outline" class="filtro" subscriptSizing="dynamic">
+      <mat-label>{{ i18n.t('listado.filtroPlaceholder') }}</mat-label>
+      <mat-icon matIconPrefix>search</mat-icon>
+      <input
+        matInput
+        type="text"
+        id="filtro-nombre"
+        [value]="embalses.filtro()"
+        (input)="filtrar($event)"
+      />
+    </mat-form-field>
+
+    @if (!embalses.cargado()) {
+      <div class="cargando">
+        <mat-progress-spinner
+          mode="indeterminate"
+          diameter="32"
+          [attr.aria-label]="i18n.t('comun.cargando')"
+        />
+      </div>
+    } @else {
+      <div class="tabla-contenedor">
+        <table mat-table [dataSource]="embalses.paginaActual()" id="tabla-embalses">
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef>{{ i18n.t('tabla.id') }}</th>
+            <td mat-cell *matCellDef="let e">{{ e.id }}</td>
+          </ng-container>
+          <ng-container matColumnDef="nombre">
+            <th mat-header-cell *matHeaderCellDef>{{ i18n.t('tabla.nombre') }}</th>
+            <td mat-cell *matCellDef="let e">{{ e.nombre }}</td>
+          </ng-container>
+          <ng-container matColumnDef="capacidad">
+            <th mat-header-cell *matHeaderCellDef>{{ i18n.t('tabla.capacidad') }}</th>
+            <td mat-cell *matCellDef="let e">{{ i18n.numero(e.capacidadHm3) }}</td>
+          </ng-container>
+          <ng-container matColumnDef="nivel">
+            <th mat-header-cell *matHeaderCellDef>{{ i18n.t('tabla.nivel') }}</th>
+            <td mat-cell *matCellDef="let e">{{ i18n.numero(e.nivelActualHm3) }}</td>
+          </ng-container>
+          <ng-container matColumnDef="acciones">
+            <th mat-header-cell *matHeaderCellDef>{{ i18n.t('tabla.acciones') }}</th>
+            <td mat-cell *matCellDef="let e" class="acciones">
+              <button
+                mat-icon-button
+                type="button"
+                class="btn-editar"
+                [matTooltip]="i18n.t('tabla.editar')"
+                [attr.aria-label]="i18n.t('tabla.editar')"
+                (click)="editar(e)"
+              >
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                type="button"
+                class="btn-eliminar"
+                [matTooltip]="i18n.t('tabla.eliminar')"
+                [attr.aria-label]="i18n.t('tabla.eliminar')"
+                (click)="eliminar(e)"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+          <tr mat-row *matRowDef="let fila; columns: columnas"></tr>
+          <tr class="mat-row sin-datos" *matNoDataRow>
+            <td class="mat-cell" [attr.colspan]="columnas.length">
+              {{ i18n.t('listado.vacio') }}
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <mat-paginator
+        id="paginador"
+        [length]="embalses.filtrados().length"
+        [pageSize]="embalses.porPagina"
+        [pageIndex]="embalses.pagina()"
+        [hidePageSize]="true"
+        (page)="cambiarPagina($event)"
+      />
+    }
+  </mat-card-content>
+</mat-card>

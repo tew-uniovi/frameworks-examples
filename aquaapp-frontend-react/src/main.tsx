@@ -14,7 +14,7 @@ import { tema } from './tema'
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ThemeProvider theme={tema}>
-      <CssBaseline />
+      <CssBaseline enableColorScheme />
       <I18nProvider>
         <SesionProvider>
           <App />

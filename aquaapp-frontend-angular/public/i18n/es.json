@@ -19,7 +19,7 @@
   "login.password2": "Repite la contraseña",
   "login.entrar": "Entrar",
   "login.crearCuenta": "Crear cuenta",
-  "footer": "Tecnologías Web · GIIS",
+  "footer": "Tecnologías web · GIIS",
   "login.title": "Iniciar sesión",
   "login.registroTitle": "Crear cuenta",
   "login.noTienesCuenta": "¿No tienes cuenta?",
@@ -51,5 +51,13 @@
   "error.generico": "Ha ocurrido un error inesperado. Inténtalo de nuevo.",
   "form.obligatorio": "Este campo es obligatorio",
   "form.minimo": "El valor no puede ser negativo",
-  "listado.vacio": "No hay embalses que mostrar"
+  "listado.vacio": "No hay embalses que mostrar",
+  "comun.cerrar": "Cerrar",
+  "comun.cancelar": "Cancelar",
+  "comun.cargando": "Cargando",
+  "nav.idioma": "Idioma",
+  "listado.porPagina": "Embalses por página",
+  "listado.primera": "Primera página",
+  "listado.ultima": "Última página",
+  "form.nivelAyuda": "No puede superar la capacidad"
 }

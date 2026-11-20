@@ -1,72 +1,91 @@
-<h3 class="titulo">{{ i18n.t('form.titulo') }}</h3>
+<mat-card appearance="outlined">
+  <mat-card-header>
+    <mat-card-title>{{ i18n.t('form.titulo') }}</mat-card-title>
+  </mat-card-header>
 
-<form id="form-embalse" class="formulario" [formGroup]="form" (ngSubmit)="guardar()">
-  <input type="hidden" id="id" [value]="id()" />
+  <mat-card-content>
+    <form id="form-embalse" class="formulario" [formGroup]="form" (ngSubmit)="guardar()">
+      <input type="hidden" id="id" [value]="id()" />
 
-  <mat-form-field appearance="outline">
-    <mat-label>{{ i18n.t('form.nombre') }}</mat-label>
-    <input
-      matInput
-      id="nombre"
-      type="text"
-      formControlName="nombre"
-      [placeholder]="i18n.t('form.nombrePlaceholder')"
-    />
-    @if (form.controls.nombre.hasError('required')) {
-      <mat-error>{{ i18n.t('form.obligatorio') }}</mat-error>
-    }
-  </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>{{ i18n.t('form.nombre') }}</mat-label>
+        <input
+          matInput
+          id="nombre"
+          type="text"
+          formControlName="nombre"
+          [placeholder]="i18n.t('form.nombrePlaceholder')"
+        />
+        @if (form.controls.nombre.hasError('required')) {
+          <mat-error>{{ i18n.t('form.obligatorio') }}</mat-error>
+        }
+      </mat-form-field>
 
-  <mat-form-field appearance="outline">
-    <mat-label>{{ i18n.t('form.capacidad') }}</mat-label>
-    <input
-      matInput
-      id="capacidadHm3"
-      type="number"
-      min="0"
-      step="0.1"
-      formControlName="capacidadHm3"
-      [placeholder]="i18n.t('form.capacidadPlaceholder')"
-    />
-    @if (form.controls.capacidadHm3.hasError('required')) {
-      <mat-error>{{ i18n.t('form.obligatorio') }}</mat-error>
-    } @else if (form.controls.capacidadHm3.hasError('min')) {
-      <mat-error>{{ i18n.t('form.minimo') }}</mat-error>
-    }
-  </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>{{ i18n.t('form.capacidad') }}</mat-label>
+        <input
+          matInput
+          id="capacidadHm3"
+          type="number"
+          min="0"
+          step="0.1"
+          formControlName="capacidadHm3"
+          [placeholder]="i18n.t('form.capacidadPlaceholder')"
+        />
+        <span matTextSuffix>hm³</span>
+        @if (form.controls.capacidadHm3.hasError('required')) {
+          <mat-error>{{ i18n.t('form.obligatorio') }}</mat-error>
+        } @else if (form.controls.capacidadHm3.hasError('min')) {
+          <mat-error>{{ i18n.t('form.minimo') }}</mat-error>
+        }
+      </mat-form-field>
 
-  <mat-form-field appearance="outline">
-    <mat-label>{{ i18n.t('form.nivel') }}</mat-label>
-    <input
-      matInput
-      id="nivelActualHm3"
-      type="number"
-      min="0"
-      step="0.1"
-      formControlName="nivelActualHm3"
-      [placeholder]="i18n.t('form.nivelPlaceholder')"
-    />
-    @if (form.controls.nivelActualHm3.hasError('required')) {
-      <mat-error>{{ i18n.t('form.obligatorio') }}</mat-error>
-    } @else if (form.controls.nivelActualHm3.hasError('min')) {
-      <mat-error>{{ i18n.t('form.minimo') }}</mat-error>
-    } @else if (form.controls.nivelActualHm3.hasError('superaCapacidad')) {
-      <mat-error>{{ i18n.t('form.nivelSuperaCapacidad') }}</mat-error>
-    }
-  </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>{{ i18n.t('form.nivel') }}</mat-label>
+        <input
+          matInput
+          id="nivelActualHm3"
+          type="number"
+          min="0"
+          step="0.1"
+          formControlName="nivelActualHm3"
+          [placeholder]="i18n.t('form.nivelPlaceholder')"
+        />
+        <span matTextSuffix>hm³</span>
+        <mat-hint>{{ i18n.t('form.nivelAyuda') }}</mat-hint>
+        @if (form.controls.nivelActualHm3.hasError('required')) {
+          <mat-error>{{ i18n.t('form.obligatorio') }}</mat-error>
+        } @else if (form.controls.nivelActualHm3.hasError('min')) {
+          <mat-error>{{ i18n.t('form.minimo') }}</mat-error>
+        } @else if (form.controls.nivelActualHm3.hasError('superaCapacidad')) {
+          <mat-error>{{ i18n.t('form.nivelSuperaCapacidad') }}</mat-error>
+        }
+      </mat-form-field>
+    </form>
+  </mat-card-content>
 
-  <div class="acciones">
-    <button mat-flat-button id="btnGuardar" type="submit" [disabled]="guardando()">
-      <mat-icon>save</mat-icon>
+  <mat-card-actions align="end">
+    <button mat-button id="btnCancelar" type="button" (click)="cancelar()">
+      {{ i18n.t('comun.cancelar') }}
+    </button>
+    <button
+      mat-flat-button
+      id="btnGuardar"
+      type="submit"
+      form="form-embalse"
+      [disabled]="guardando()"
+    >
+      @if (guardando()) {
+        <mat-progress-spinner
+          id="spinnerFormulario"
+          mode="indeterminate"
+          diameter="20"
+          [attr.aria-label]="i18n.t('comun.cargando')"
+        />
+      } @else {
+        <mat-icon>save</mat-icon>
+      }
       {{ i18n.t('form.guardar') }}
     </button>
-    @if (guardando()) {
-      <mat-progress-spinner
-        id="spinnerFormulario"
-        mode="indeterminate"
-        diameter="24"
-        aria-label="..."
-      />
-    }
-  </div>
-</form>
+  </mat-card-actions>
+</mat-card>

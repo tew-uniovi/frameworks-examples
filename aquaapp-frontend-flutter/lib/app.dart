@@ -1,3 +1,5 @@
+import 'dart:ui' show PointerDeviceKind;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -20,13 +22,37 @@ class AppScope extends InheritedNotifier<AppEstado> {
   }
 }
 
-/// Aplicación raíz: Material 3 con una paleta derivada del azul del logo.
+/// Permite arrastrar las listas con el ratón además del dedo (en la web de
+/// escritorio el comportamiento por defecto solo admite la rueda y la barra).
+class ComportamientoDesplazamiento extends MaterialScrollBehavior {
+  const ComportamientoDesplazamiento();
+
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+        ...super.dragDevices,
+        PointerDeviceKind.mouse,
+      };
+}
+
+/// Aplicación raíz: Material 3 con una paleta derivada del azul del logo,
+/// tema claro y oscuro según el sistema.
 class AplicacionAquaapp extends StatelessWidget {
   const AplicacionAquaapp({super.key, required this.estado});
 
   final AppEstado estado;
 
-  static const Color _azulLogo = Color(0xFF093074);
+  /// Azul del logo (#093074), semilla de toda la paleta.
+  static const Color azulLogo = Color(0xFF093074);
+
+  static ThemeData _tema(Brightness brillo) => ThemeData(
+        useMaterial3: true,
+        // Roboto va incluida en la app (assets/fonts): no se descarga de Google Fonts.
+        fontFamily: 'Roboto',
+        colorScheme: ColorScheme.fromSeed(seedColor: azulLogo, brightness: brillo),
+        inputDecorationTheme: const InputDecorationTheme(
+          border: OutlineInputBorder(),
+        ),
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -38,10 +64,10 @@ class AplicacionAquaapp extends StatelessWidget {
           return MaterialApp(
             title: 'Aquaapp',
             debugShowCheckedModeBanner: false,
-            theme: ThemeData(
-              useMaterial3: true,
-              colorScheme: ColorScheme.fromSeed(seedColor: _azulLogo),
-            ),
+            theme: _tema(Brightness.light),
+            darkTheme: _tema(Brightness.dark),
+            themeMode: ThemeMode.system,
+            scrollBehavior: const ComportamientoDesplazamiento(),
             locale: Locale(idioma),
             supportedLocales: const [Locale('es'), Locale('en')],
             localizationsDelegates: GlobalMaterialLocalizations.delegates,

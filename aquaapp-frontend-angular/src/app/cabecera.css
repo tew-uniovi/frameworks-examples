@@ -6,13 +6,19 @@
 
 .marca {
   margin-right: 8px;
+  border-radius: var(--mat-sys-corner-small);
+}
+
+.marca:focus-visible {
+  outline: 2px solid var(--mat-sys-primary);
+  outline-offset: 4px;
 }
 
 .relleno {
   flex: 1 1 auto;
 }
 
-/* En pantallas estrechas los menús se quedan solo con el icono (llevan aria-label). */
+/* En pantallas estrechas los menús se quedan solo con el icono (llevan aria-label y tooltip). */
 @media (max-width: 599px) {
   .texto-menu {
     display: none;

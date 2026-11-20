@@ -93,6 +93,6 @@ export class VistaService {
   }
 
   private avisar(clave: string): void {
-    this.snackBar.open(this.i18n.t(clave), undefined, { duration: 8000 });
+    this.snackBar.open(this.i18n.t(clave), this.i18n.t('comun.cerrar'), { duration: 8000 });
   }
 }

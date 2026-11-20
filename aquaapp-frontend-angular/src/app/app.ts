@@ -46,8 +46,8 @@ export class App {
     if (this.dialogoAuth) return; // ya abierto: solo cambia el modo (login/registro)
     const ref = this.dialogo.open(AuthDialog, {
       id: 'modalAuth',
-      width: '420px',
-      maxWidth: '92vw',
+      width: '400px',
+      maxWidth: 'calc(100vw - 32px)',
       autoFocus: 'first-tabbable',
     });
     this.dialogoAuth = ref;

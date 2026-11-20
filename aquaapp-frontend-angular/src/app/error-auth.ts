@@ -13,6 +13,7 @@ import { VistaService } from './vista.service';
   template: `
     <mat-card appearance="outlined" class="tarjeta">
       <mat-card-header>
+        <mat-icon class="icono">lock_clock</mat-icon>
         <mat-card-title>{{ i18n.t('login.sesionNoValidaTitle') }}</mat-card-title>
       </mat-card-header>
       <mat-card-content>
@@ -28,16 +29,25 @@ import { VistaService } from './vista.service';
   `,
   styles: `
     .tarjeta {
-      max-width: 420px;
+      max-width: 416px;
       margin: 32px auto 0;
       text-align: center;
     }
     mat-card-header {
-      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      padding-top: 16px;
+    }
+    .icono {
+      width: 48px;
+      height: 48px;
+      font-size: 48px;
+      color: var(--mat-sys-error);
     }
     mat-card-actions {
       justify-content: center;
-      padding-bottom: 16px;
+      padding: 0 16px 16px;
     }
   `,
 })

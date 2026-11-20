@@ -1,7 +1,25 @@
+.encabezado {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.titulo {
+  margin: 0;
+  font: var(--mat-sys-headline-small);
+}
+
 .actualizado {
-  margin: 0 0 12px;
+  margin: 4px 0 0;
   color: var(--mat-sys-on-surface-variant);
   font: var(--mat-sys-body-medium);
+}
+
+.contenido-tarjeta {
+  padding-top: 16px;
 }
 
 .filtro {
@@ -18,8 +36,8 @@ table {
 }
 
 .acciones {
-  white-space: nowrap;
   width: 1%;
+  white-space: nowrap;
 }
 
 .sin-datos td {

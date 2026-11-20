@@ -9,6 +9,8 @@
       id="menuEmbalses"
       [matMenuTriggerFor]="menuEmbalses"
       [attr.aria-label]="i18n.t('nav.embalses')"
+      [matTooltip]="i18n.t('nav.embalses')"
+      [matTooltipDisabled]="!compacto()"
     >
       <mat-icon>water_drop</mat-icon>
       <span class="texto-menu">{{ i18n.t('nav.embalses') }}</span>
@@ -28,7 +30,14 @@
 
   <span class="relleno"></span>
 
-  <button mat-button id="menuSesion" [matMenuTriggerFor]="menuSesion" [attr.aria-label]="saludo()">
+  <button
+    mat-button
+    id="menuSesion"
+    [matMenuTriggerFor]="menuSesion"
+    [attr.aria-label]="saludo()"
+    [matTooltip]="saludo()"
+    [matTooltipDisabled]="!compacto()"
+  >
     <mat-icon>account_circle</mat-icon>
     <span id="saludo" class="texto-menu">{{ saludo() }}</span>
     <mat-icon iconPositionEnd class="texto-menu">arrow_drop_down</mat-icon>
@@ -60,7 +69,8 @@
     mat-button
     id="menuIdioma"
     [matMenuTriggerFor]="menuIdioma"
-    aria-label="Idioma / Language"
+    [attr.aria-label]="i18n.t('nav.idioma')"
+    [matTooltip]="i18n.t('nav.idioma')"
   >
     <mat-icon>translate</mat-icon>
     <span id="idiomaActivo">{{ i18n.idioma().toUpperCase() }}</span>

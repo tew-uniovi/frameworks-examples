@@ -1,8 +1,11 @@
 import { useCallback, useEffect, useState } from 'react'
 import Alert from '@mui/material/Alert'
 import Box from '@mui/material/Box'
+import IconButton from '@mui/material/IconButton'
 import Snackbar from '@mui/material/Snackbar'
+import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
+import CloseIcon from '@mui/icons-material/Close'
 import { ErrorApi } from './api/http'
 import type { Embalse } from './api/tipos'
 import { BarraNavegacion } from './components/BarraNavegacion'
@@ -149,6 +152,7 @@ export default function App() {
               onFiltrar={listado.filtrar}
               pagina={listado.pagina}
               ultimaPagina={listado.ultimaPagina}
+              total={listado.total}
               onIrAPagina={listado.irAPagina}
               onEditar={irAEdicion}
               onEliminar={eliminar}
@@ -157,7 +161,7 @@ export default function App() {
           {vista === 'formulario' && <FormularioView key={enEdicion?.id ?? 'nuevo'} embalse={enEdicion} onGuardar={guardar} />}
           {vista === 'errorAuth' && <ErrorAuthView onIrAlLogin={() => setModal('login')} />}
         </Box>
-        <Box component="aside" sx={{ width: { xs: '100%', md: 260 }, flexShrink: 0 }}>
+        <Box component="aside" sx={{ width: { xs: '100%', md: (theme) => theme.spacing(32) }, flexShrink: 0 }}>
           {vista === 'listado' && <PanelIndicadores embalses={datos.embalses} />}
         </Box>
       </Box>
@@ -179,7 +183,18 @@ export default function App() {
         onClose={(_, motivo) => motivo !== 'clickaway' && setAvisoAbierto(false)}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       >
-        <Alert id="mensaje-error" severity="error" variant="filled" onClose={() => setAvisoAbierto(false)}>
+        <Alert
+          id="mensaje-error"
+          severity="error"
+          variant="filled"
+          action={
+            <Tooltip title={t('comun.cerrar')}>
+              <IconButton color="inherit" size="small" aria-label={t('comun.cerrar')} onClick={() => setAvisoAbierto(false)}>
+                <CloseIcon fontSize="small" />
+              </IconButton>
+            </Tooltip>
+          }
+        >
           {t(aviso)}
         </Alert>
       </Snackbar>

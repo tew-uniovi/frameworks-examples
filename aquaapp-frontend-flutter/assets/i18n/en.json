@@ -50,5 +50,13 @@
   "error.sinPermiso": "You do not have permission for this action",
   "error.generico": "An error occurred while contacting the server",
   "validacion.obligatorio": "Required field",
-  "validacion.numero": "Enter a valid number (0 or greater)"
+  "validacion.numero": "Enter a valid number (0 or greater)",
+  "comun.cancelar": "Cancel",
+  "comun.cerrar": "Close",
+  "comun.cargando": "Loading",
+  "comun.guardando": "Saving",
+  "nav.masOpciones": "More options",
+  "nav.idioma": "Language",
+  "idioma.es": "Español",
+  "idioma.en": "English"
 }

@@ -19,7 +19,7 @@
   "login.password2": "Repeat password",
   "login.entrar": "Log in",
   "login.crearCuenta": "Create account",
-  "footer": "Web Technologies · GIIS",
+  "footer": "Web technologies · GIIS",
   "login.title": "Log in",
   "login.registroTitle": "Create account",
   "login.noTienesCuenta": "Don't have an account?",
@@ -51,5 +51,13 @@
   "error.generico": "An unexpected error occurred. Please try again.",
   "form.obligatorio": "This field is required",
   "form.minimo": "The value cannot be negative",
-  "listado.vacio": "No reservoirs to show"
+  "listado.vacio": "No reservoirs to show",
+  "comun.cerrar": "Close",
+  "comun.cancelar": "Cancel",
+  "comun.cargando": "Loading",
+  "nav.idioma": "Language",
+  "listado.porPagina": "Reservoirs per page",
+  "listado.primera": "First page",
+  "listado.ultima": "Last page",
+  "form.nivelAyuda": "It cannot exceed the capacity"
 }

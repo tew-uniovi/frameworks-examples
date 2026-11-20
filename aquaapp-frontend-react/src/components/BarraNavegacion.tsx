@@ -35,11 +35,23 @@ export function BarraNavegacion({ onListado, onAlta, onLogin, onRegistro, onLogo
       position="static"
       color="inherit"
       elevation={0}
-      sx={{ bgcolor: 'background.paper', borderBottom: 1, borderColor: 'divider' }}
+      sx={{ bgcolor: 'background.paper', color: 'text.primary', borderBottom: 1, borderColor: 'divider' }}
     >
       <Toolbar>
-        <Box component="a" href="#" sx={{ display: 'flex', mr: 2 }} aria-label="aquaapp">
-          <img src={logo} alt="aquaapp" style={{ height: '3rem' }} />
+        <Box
+          component="a"
+          href="#"
+          aria-label="aquaapp"
+          sx={(theme) => ({
+            display: 'flex',
+            mr: 2,
+            borderRadius: 1,
+            px: 1,
+            // el logo es azul oscuro: en modo oscuro se apoya sobre una pastilla clara
+            ...theme.applyStyles('dark', { bgcolor: 'common.white' }),
+          })}
+        >
+          <Box component="img" src={logo} alt="aquaapp" sx={{ height: (theme) => theme.spacing(5) }} />
         </Box>
 
         <Box sx={{ flexGrow: 1, display: 'flex' }}>
@@ -103,7 +115,7 @@ export function BarraNavegacion({ onListado, onAlta, onLogin, onRegistro, onLogo
           alinearDerecha
           icono={<TranslateIcon />}
           etiqueta={<span id="idiomaActivo">{idioma.toUpperCase()}</span>}
-          ariaLabel={`Idioma / Language: ${idioma.toUpperCase()}`}
+          ariaLabel={`${t('nav.idioma')}: ${idioma.toUpperCase()}`}
         >
           <MenuItem data-idioma="es" selected={idioma === 'es'} onClick={() => setIdioma('es')}>
             ES · Español

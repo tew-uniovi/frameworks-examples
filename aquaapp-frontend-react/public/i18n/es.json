@@ -48,5 +48,9 @@
   "tabla.editar": "Editar",
   "tabla.eliminar": "Eliminar",
   "error.sinPermiso": "No tienes permiso para esta acción",
-  "error.servidor": "No se pudo completar la operación. Inténtalo de nuevo."
+  "error.servidor": "No se pudo completar la operación. Inténtalo de nuevo.",
+  "comun.cerrar": "Cerrar",
+  "comun.cancelar": "Cancelar",
+  "nav.idioma": "Idioma",
+  "app.descripcion": "Gestión de recursos hídricos del Principado de Asturias"
 }

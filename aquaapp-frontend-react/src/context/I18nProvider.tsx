@@ -33,6 +33,8 @@ export function I18nProvider({ children }: { children: ReactNode }) {
         if (cancelado) return
         setCargado({ idioma: solicitado, textos })
         document.documentElement.lang = solicitado
+        const descripcion = textos['app.descripcion']
+        if (descripcion) document.querySelector('meta[name="description"]')?.setAttribute('content', descripcion)
         try {
           localStorage.setItem('idioma', solicitado)
         } catch {

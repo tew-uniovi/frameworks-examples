@@ -1,15 +1,16 @@
 @use '@angular/material' as mat;
 
-// Tema Material 3 (azul, como el logo de aquaapp). Roboto y Material Icons se
-// cargan desde angular.json (paquetes npm, sin CDN).
+// Tema Material 3 (azul, como el logo de aquaapp) con esquema claro y oscuro según el
+// sistema (`color-scheme: light dark`). Todo el color sale de los tokens --mat-sys-*.
+// Roboto y Material Icons se cargan desde angular.json (paquetes npm, sin CDN).
 html {
-  color-scheme: light;
+  color-scheme: light dark;
   @include mat.theme(
     (
       color: (
         primary: mat.$azure-palette,
         tertiary: mat.$cyan-palette,
-        theme-type: light,
+        theme-type: color-scheme,
       ),
       typography: Roboto,
       density: 0,
@@ -24,7 +25,12 @@ body {
   font: var(--mat-sys-body-large);
 }
 
-app-root,
+app-root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
 app-cabecera,
 app-listado,
 app-formulario,
@@ -34,6 +40,13 @@ app-panel {
 }
 
 .logo-cabecera {
-  height: 2.5rem;
   display: block;
+  height: 40px;
+}
+
+// El logo es azul oscuro: en modo oscuro se aclara para que se vea sobre la barra.
+@media (prefers-color-scheme: dark) {
+  .logo-cabecera {
+    filter: invert(1) hue-rotate(180deg);
+  }
 }

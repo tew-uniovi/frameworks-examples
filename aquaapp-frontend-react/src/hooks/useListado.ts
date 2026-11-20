@@ -21,7 +21,10 @@ export function useListado(embalses: Embalse[]) {
     },
     pagina: vista.pagina,
     ultimaPagina: vista.ultimaPagina,
+    /** Embalses que cumplen el filtro (todas las paginas). */
+    total: filtrados.length,
     visibles: vista.items,
-    irAPagina: (delta: number) => setPagina(vista.pagina + delta),
+    /** Pagina destino (base 0), tal y como la entrega TablePagination. */
+    irAPagina: (destino: number) => setPagina(destino),
   }
 }

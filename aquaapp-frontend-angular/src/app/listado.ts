@@ -7,6 +7,7 @@ import {
   Injectable,
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -40,6 +41,9 @@ export class PaginadorTraducido extends MatPaginatorIntl {
   private actualizarEtiquetas(): void {
     this.previousPageLabel = this.i18n.t('listado.anterior');
     this.nextPageLabel = this.i18n.t('listado.siguiente');
+    this.firstPageLabel = this.i18n.t('listado.primera');
+    this.lastPageLabel = this.i18n.t('listado.ultima');
+    this.itemsPerPageLabel = this.i18n.t('listado.porPagina');
     this.changes.next();
   }
 }
@@ -49,6 +53,7 @@ export class PaginadorTraducido extends MatPaginatorIntl {
   selector: 'app-listado',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    MatCardModule,
     MatTableModule,
     MatPaginatorModule,
     MatFormFieldModule,
@@ -83,6 +88,10 @@ export class Listado {
 
   protected cambiarPagina(evento: PageEvent): void {
     this.embalses.ponerPagina(evento.pageIndex);
+  }
+
+  protected nuevo(): void {
+    this.vista.mostrarFormulario();
   }
 
   protected editar(embalse: Embalse): void {

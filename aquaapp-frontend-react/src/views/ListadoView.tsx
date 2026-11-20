@@ -1,15 +1,14 @@
 import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
 import InputAdornment from '@mui/material/InputAdornment'
 import LinearProgress from '@mui/material/LinearProgress'
 import Paper from '@mui/material/Paper'
-import Stack from '@mui/material/Stack'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
+import TablePagination from '@mui/material/TablePagination'
 import TableRow from '@mui/material/TableRow'
 import TextField from '@mui/material/TextField'
 import Tooltip from '@mui/material/Tooltip'
@@ -19,6 +18,7 @@ import EditIcon from '@mui/icons-material/Edit'
 import SearchIcon from '@mui/icons-material/Search'
 import type { Embalse } from '../api/tipos'
 import { useI18n } from '../context/i18n'
+import { POR_PAGINA } from '../utils/listado'
 
 // En pantallas muy estrechas se oculta la columna Id para que quepan las acciones
 const ocultoEnMovil = { display: { xs: 'none', sm: 'table-cell' } }
@@ -31,7 +31,9 @@ interface Props {
   onFiltrar: (texto: string) => void
   pagina: number
   ultimaPagina: number
-  onIrAPagina: (delta: number) => void
+  /** Total de embalses que cumplen el filtro */
+  total: number
+  onIrAPagina: (destino: number) => void
   onEditar: (embalse: Embalse) => void
   onEliminar: (embalse: Embalse) => void
 }
@@ -44,6 +46,7 @@ export function ListadoView({
   onFiltrar,
   pagina,
   ultimaPagina,
+  total,
   onIrAPagina,
   onEditar,
   onEliminar,
@@ -77,8 +80,9 @@ export function ListadoView({
         }}
       />
 
-      <TableContainer component={Paper} variant="outlined">
+      <Paper variant="outlined">
         {cargando && <LinearProgress />}
+        <TableContainer>
         <Table size="small">
           <TableHead>
             <TableRow sx={{ bgcolor: 'action.hover' }}>
@@ -117,19 +121,20 @@ export function ListadoView({
             ))}
           </TableBody>
         </Table>
-      </TableContainer>
+        </TableContainer>
+        <TablePagination
+          id="paginador"
+          component="div"
+          count={total}
+          page={pagina}
+          rowsPerPage={POR_PAGINA}
+          rowsPerPageOptions={[]}
+          onPageChange={(_, destino) => onIrAPagina(destino)}
+          labelDisplayedRows={() => `${t('listado.pagina')} ${pagina + 1} ${t('listado.de')} ${ultimaPagina + 1}`}
+          getItemAriaLabel={(tipo) => t(tipo === 'next' ? 'listado.siguiente' : 'listado.anterior')}
+        />
+      </Paper>
 
-      <Stack id="paginador" direction="row" spacing={2} sx={{ mt: 2, alignItems: 'center' }}>
-        <Button variant="outlined" size="small" disabled={pagina === 0} onClick={() => onIrAPagina(-1)}>
-          {t('listado.anterior')}
-        </Button>
-        <Typography variant="body2">
-          {t('listado.pagina')} {pagina + 1} {t('listado.de')} {ultimaPagina + 1}
-        </Typography>
-        <Button variant="outlined" size="small" disabled={pagina >= ultimaPagina} onClick={() => onIrAPagina(1)}>
-          {t('listado.siguiente')}
-        </Button>
-      </Stack>
     </Box>
   )
 }
