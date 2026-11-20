@@ -45,7 +45,7 @@ jobs:
         framework: [angular, react, flutter]
     steps:
       - name: Checkout de este repositorio
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Login en GHCR
         uses: docker/login-action@v4
