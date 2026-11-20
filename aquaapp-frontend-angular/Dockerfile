@@ -1,5 +1,5 @@
 # Etapa 1: compilar la SPA con Angular CLI
-FROM node:24.22.3-alpine AS build
+FROM node:26.13.1-alpine AS build
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
