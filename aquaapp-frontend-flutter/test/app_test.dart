@@ -47,8 +47,9 @@ Future<AppEstado> _crearEstado(
   WidgetTester tester,
   _Servidor servidor, {
   String? token,
+  Size tamano = const Size(2000, 1000),
 }) async {
-  tester.view.physicalSize = const Size(2000, 1000);
+  tester.view.physicalSize = tamano;
   tester.view.devicePixelRatio = 1;
   // La fuente de test (Ahem) es mucho más ancha que Roboto: se reduce para que
   // las cabeceras de la tabla quepan, igual que en un navegador real.
@@ -218,5 +219,34 @@ void main() {
     expect(find.text('Hi, admin'), findsOneWidget);
     expect(find.text('Average level: 65 hm³'), findsOneWidget);
     expect(find.text('Page 1 of 3'), findsOneWidget);
+  });
+
+  testWidgets('en móvil: menú de desbordamiento, tarjetas y botón flotante',
+      (tester) async {
+    final estado = await _crearEstado(tester, _Servidor(),
+        token: crearJwt(usuario: 'admin'), tamano: const Size(390, 844));
+    await _abrirApp(tester, estado);
+
+    expect(find.byType(DataTable), findsNothing);
+    expect(find.byType(ListTile), findsNWidgets(5));
+    expect(find.byKey(const Key('boton-nuevo-embalse')), findsOneWidget);
+
+    await tester.tap(find.byTooltip('Más opciones'));
+    await tester.pumpAndSettle();
+    expect(find.text('Hola, admin'), findsOneWidget);
+    expect(find.text('Salir'), findsOneWidget);
+    expect(find.text('Español'), findsOneWidget);
+  });
+
+  testWidgets('«Cancelar» cierra el diálogo de login sin iniciar sesión',
+      (tester) async {
+    final estado = await _crearEstado(tester, _Servidor());
+    await _abrirApp(tester, estado);
+    expect(find.byType(AlertDialog), findsOneWidget);
+
+    await tester.tap(find.byKey(const Key('boton-cancelar-auth')));
+    await tester.pumpAndSettle();
+    expect(find.byType(AlertDialog), findsNothing);
+    expect(estado.hayToken, isFalse);
   });
 }

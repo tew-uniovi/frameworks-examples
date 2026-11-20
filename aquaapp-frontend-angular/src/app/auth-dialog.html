@@ -56,7 +56,7 @@
       type="button"
       id="btnIrALogin"
       class="cambio"
-      (click)="vista.abrirModal('login')"
+      (click)="cambiarA('login')"
     >
       {{ i18n.t('login.yaTienesCuenta') }} {{ i18n.t('login.iniciaSesion') }}
     </button>
@@ -125,7 +125,7 @@
       type="button"
       id="btnIrARegistro"
       class="cambio"
-      (click)="vista.abrirModal('registro')"
+      (click)="cambiarA('registro')"
     >
       {{ i18n.t('login.noTienesCuenta') }} {{ i18n.t('login.registrate') }}
     </button>

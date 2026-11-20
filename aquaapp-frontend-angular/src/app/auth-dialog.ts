@@ -1,10 +1,8 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  effect,
   inject,
   signal,
-  untracked,
 } from '@angular/core';
 import {
   AbstractControl,
@@ -74,15 +72,14 @@ export class AuthDialog {
       this.formRegistro.controls.password2.updateValueAndValidity(),
     );
 
-    // Al pasar de login a registro (o al revés) se parte de un formulario limpio
-    effect(() => {
-      this.vista.modal();
-      untracked(() => {
-        this.formLogin.reset();
-        this.formRegistro.reset();
-        this.error.set(null);
-      });
-    });
+  }
+
+  /** Pasa de login a registro (o al revés) partiendo de un formulario limpio. */
+  protected cambiarA(modo: 'login' | 'registro'): void {
+    this.formLogin.reset();
+    this.formRegistro.reset();
+    this.error.set(null);
+    this.vista.abrirModal(modo);
   }
 
   protected login(): void {

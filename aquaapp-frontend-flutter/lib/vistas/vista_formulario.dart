@@ -150,7 +150,7 @@ class _VistaFormularioState extends State<VistaFormulario> {
             key: const Key('boton-guardar'),
             onPressed: estado.guardando ? null : _guardar,
             icon: estado.guardando
-                ? const SizedBox.square(
+                ? SizedBox.square(
                     dimension: 18,
                     child: CircularProgressIndicator(
                       strokeWidth: 2,
