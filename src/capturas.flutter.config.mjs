@@ -195,9 +195,10 @@ export default {
         await abrirFormulario(page);
         await rellenarFormulario(page);
         await page.getByRole("button", { name: TXT.guardar }).click();
-        await page.getByText(EMBALSE_CAPTURA).first().waitFor();
+        // De vuelta en el listado (el formulario no tiene paginador) y con la recarga terminada.
+        await page.getByText(TXT.pagina).first().waitFor();
         await page.waitForSelector("body[data-listo]");
-        await pausa(page, 700);
+        await pausa(page, 900);
       },
     },
   ],
