@@ -1,0 +1,25 @@
+<app-cabecera />
+
+<div class="contenido">
+  <main>
+    @switch (vista.vista()) {
+      @case ('listado') {
+        <app-listado />
+      }
+      @case ('formulario') {
+        <app-formulario />
+      }
+      @case ('errorAuth') {
+        <app-error-auth />
+      }
+    }
+  </main>
+
+  @if (vista.vista() === 'listado' && embalses.cargado()) {
+    <aside>
+      <app-panel />
+    </aside>
+  }
+</div>
+
+<footer>{{ i18n.t('footer') }}</footer>

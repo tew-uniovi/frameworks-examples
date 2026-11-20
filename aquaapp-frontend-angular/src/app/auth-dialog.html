@@ -1,0 +1,143 @@
+@if (vista.modal() === 'registro') {
+  <h2 mat-dialog-title id="tituloAuth">{{ i18n.t('login.registroTitle') }}</h2>
+
+  <mat-dialog-content>
+    <form id="form-registro" class="formulario" [formGroup]="formRegistro" (ngSubmit)="registrar()">
+      <mat-form-field appearance="outline">
+        <mat-label>{{ i18n.t('login.usuario') }}</mat-label>
+        <input
+          matInput
+          id="usuario"
+          type="text"
+          autocomplete="username"
+          formControlName="usuario"
+          cdkFocusInitial
+        />
+        <mat-error>{{ i18n.t('form.obligatorio') }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>{{ i18n.t('login.password') }}</mat-label>
+        <input
+          matInput
+          id="password"
+          type="password"
+          autocomplete="new-password"
+          formControlName="password"
+        />
+        <mat-error>{{ i18n.t('form.obligatorio') }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>{{ i18n.t('login.password2') }}</mat-label>
+        <input
+          matInput
+          id="password2"
+          type="password"
+          autocomplete="new-password"
+          formControlName="password2"
+        />
+        @if (formRegistro.controls.password2.hasError('required')) {
+          <mat-error>{{ i18n.t('form.obligatorio') }}</mat-error>
+        } @else if (formRegistro.controls.password2.hasError('noCoinciden')) {
+          <mat-error>{{ i18n.t('login.passwordsNoCoinciden') }}</mat-error>
+        }
+      </mat-form-field>
+
+      @if (error(); as clave) {
+        <p id="mensaje-error" class="error" role="alert">{{ i18n.t(clave) }}</p>
+      }
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" id="btnIrALogin" class="cambio" (click)="cambiarA('login')">
+      {{ i18n.t('login.iniciaSesion') }}
+    </button>
+    <button mat-button type="button" id="btnCancelar" mat-dialog-close>
+      {{ i18n.t('comun.cancelar') }}
+    </button>
+    <button
+      mat-flat-button
+      id="btnRegistro"
+      type="submit"
+      form="form-registro"
+      [disabled]="cargando()"
+    >
+      @if (cargando()) {
+        <mat-progress-spinner
+          id="spinnerRegistro"
+          mode="indeterminate"
+          diameter="20"
+          [attr.aria-label]="i18n.t('comun.cargando')"
+        />
+      } @else {
+        <mat-icon>person_add</mat-icon>
+      }
+      {{ i18n.t('login.crearCuenta') }}
+    </button>
+  </mat-dialog-actions>
+} @else {
+  <h2 mat-dialog-title id="tituloAuth">{{ i18n.t('login.title') }}</h2>
+
+  <mat-dialog-content>
+    <form id="form-login" class="formulario" [formGroup]="formLogin" (ngSubmit)="login()">
+      <mat-form-field appearance="outline">
+        <mat-label>{{ i18n.t('login.usuario') }}</mat-label>
+        <input
+          matInput
+          id="usuario"
+          type="text"
+          autocomplete="username"
+          formControlName="usuario"
+          cdkFocusInitial
+        />
+        <mat-error>{{ i18n.t('form.obligatorio') }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>{{ i18n.t('login.password') }}</mat-label>
+        <input
+          matInput
+          id="password"
+          type="password"
+          autocomplete="current-password"
+          formControlName="password"
+        />
+        <mat-error>{{ i18n.t('form.obligatorio') }}</mat-error>
+      </mat-form-field>
+
+      @if (error(); as clave) {
+        <p id="mensaje-error" class="error" role="alert">{{ i18n.t(clave) }}</p>
+      }
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button
+      mat-button
+      type="button"
+      id="btnIrARegistro"
+      class="cambio"
+      (click)="cambiarA('registro')"
+    >
+      {{ i18n.t('login.registrate') }}
+    </button>
+    <button mat-button type="button" id="btnCancelar" mat-dialog-close>
+      {{ i18n.t('comun.cancelar') }}
+    </button>
+    <button mat-flat-button id="btnLogin" type="submit" form="form-login" [disabled]="cargando()">
+      @if (cargando()) {
+        <mat-progress-spinner
+          id="spinnerLogin"
+          mode="indeterminate"
+          diameter="20"
+          [attr.aria-label]="i18n.t('comun.cargando')"
+        />
+      } @else {
+        <mat-icon>login</mat-icon>
+      }
+      {{ i18n.t('login.entrar') }}
+    </button>
+  </mat-dialog-actions>
+}
