@@ -4,6 +4,11 @@
 server {
     listen 80;
     server_name _;
+    root /usr/share/nginx/html;
+
+    # Redirecciones relativas (Location: /aquaapp/): detras de un puerto publicado
+    # distinto del 80 (p. ej. 8082) una URL absoluta perderia el puerto.
+    absolute_redirect off;
 
     # DNS interno de Docker. Con las URL en variables (set + proxy_pass $var) nginx
     # resuelve el nombre en cada peticion, no al arrancar: si `backend` o `auth`
@@ -13,6 +18,10 @@ server {
     set $auth ${AUTH_URL};
 
     location = / {
+        return 302 /aquaapp/;
+    }
+
+    location = /aquaapp {
         return 302 /aquaapp/;
     }
 

@@ -2,13 +2,7 @@
   <h2 mat-dialog-title id="tituloAuth">
     {{ i18n.t(vista.modal() === 'registro' ? 'login.registroTitle' : 'login.title') }}
   </h2>
-  <button
-    mat-icon-button
-    type="button"
-    mat-dialog-close
-    aria-label="Cerrar"
-    class="cerrar"
-  >
+  <button mat-icon-button type="button" mat-dialog-close aria-label="Cerrar" class="cerrar">
     <mat-icon>close</mat-icon>
   </button>
 </div>
@@ -33,7 +27,7 @@
         <input matInput id="password2" type="password" formControlName="password2" />
         @if (formRegistro.controls.password2.hasError('required')) {
           <mat-error>{{ i18n.t('form.obligatorio') }}</mat-error>
-        } @else if (formRegistro.hasError('noCoinciden')) {
+        } @else if (formRegistro.controls.password2.hasError('noCoinciden')) {
           <mat-error>{{ i18n.t('login.passwordsNoCoinciden') }}</mat-error>
         }
       </mat-form-field>
@@ -48,7 +42,12 @@
           {{ i18n.t('login.crearCuenta') }}
         </button>
         @if (cargando()) {
-          <mat-progress-spinner id="spinnerRegistro" mode="indeterminate" diameter="24" aria-label="..." />
+          <mat-progress-spinner
+            id="spinnerRegistro"
+            mode="indeterminate"
+            diameter="24"
+            aria-label="..."
+          />
         }
       </div>
     </form>
@@ -83,7 +82,12 @@
           {{ i18n.t('login.entrar') }}
         </button>
         @if (cargando()) {
-          <mat-progress-spinner id="spinnerLogin" mode="indeterminate" diameter="24" aria-label="..." />
+          <mat-progress-spinner
+            id="spinnerLogin"
+            mode="indeterminate"
+            diameter="24"
+            aria-label="..."
+          />
         }
       </div>
     </form>

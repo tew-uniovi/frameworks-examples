@@ -24,10 +24,9 @@ import { I18nService } from './i18n.service';
 import { SesionService } from './sesion.service';
 import { VistaService } from './vista.service';
 
-function passwordsIguales(grupo: AbstractControl): ValidationErrors | null {
-  return grupo.get('password')?.value === grupo.get('password2')?.value
-    ? null
-    : { noCoinciden: true };
+function passwordsIguales(repetida: AbstractControl): ValidationErrors | null {
+  const password = repetida.parent?.get('password')?.value as string | undefined;
+  return password === undefined || repetida.value === password ? null : { noCoinciden: true };
 }
 
 /**
@@ -59,20 +58,22 @@ export class AuthDialog {
     usuario: ['', Validators.required],
     password: ['', Validators.required],
   });
-  protected readonly formRegistro = this.fb.group(
-    {
-      usuario: ['', Validators.required],
-      password: ['', Validators.required],
-      password2: ['', Validators.required],
-    },
-    { validators: passwordsIguales },
-  );
+  protected readonly formRegistro = this.fb.group({
+    usuario: ['', Validators.required],
+    password: ['', Validators.required],
+    password2: ['', [Validators.required, passwordsIguales]],
+  });
 
   protected readonly cargando = signal(false);
   /** Clave i18n del error del servidor (se guarda la clave para que siga el idioma). */
   protected readonly error = signal<string | null>(null);
 
   constructor() {
+    // Si cambia la contraseña hay que volver a comprobar que la repetición coincida
+    this.formRegistro.controls.password.valueChanges.subscribe(() =>
+      this.formRegistro.controls.password2.updateValueAndValidity(),
+    );
+
     // Al pasar de login a registro (o al revés) se parte de un formulario limpio
     effect(() => {
       this.vista.modal();

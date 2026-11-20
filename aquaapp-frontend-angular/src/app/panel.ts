@@ -18,7 +18,9 @@ import { I18nService } from './i18n.service';
         </p>
         <p id="panel-nivel-medio">
           <mat-icon>show_chart</mat-icon>
-          <span>{{ i18n.t('panel.nivelMedio') }}: {{ i18n.numero(embalses.nivelMedio()) }} hm³</span>
+          <span
+            >{{ i18n.t('panel.nivelMedio') }}: {{ i18n.numero(embalses.nivelMedio()) }} hm³</span
+          >
         </p>
       </mat-card-content>
     </mat-card>

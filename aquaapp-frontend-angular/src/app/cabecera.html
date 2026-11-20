@@ -56,7 +56,12 @@
     }
   </mat-menu>
 
-  <button mat-button id="menuIdioma" [matMenuTriggerFor]="menuIdioma" aria-label="Idioma / Language">
+  <button
+    mat-button
+    id="menuIdioma"
+    [matMenuTriggerFor]="menuIdioma"
+    aria-label="Idioma / Language"
+  >
     <mat-icon>translate</mat-icon>
     <span id="idiomaActivo">{{ i18n.idioma().toUpperCase() }}</span>
   </button>
