@@ -48,12 +48,16 @@ Future<AppEstado> _crearEstado(
   _Servidor servidor, {
   String? token,
 }) async {
-  tester.view.physicalSize = const Size(1280, 900);
+  tester.view.physicalSize = const Size(2000, 1000);
   tester.view.devicePixelRatio = 1;
+  // La fuente de test (Ahem) es mucho más ancha que Roboto: se reduce para que
+  // las cabeceras de la tabla quepan, igual que en un navegador real.
+  tester.platformDispatcher.textScaleFactorTestValue = 0.6;
   addTearDown(tester.view.reset);
+  addTearDown(tester.platformDispatcher.clearAllTestValues);
   return (await tester.runAsync(() => AppEstado.iniciar(
         cliente: servidor.cliente,
-        almacenSesion: AlmacenMemoria({if (token != null) 'jwt': token}),
+        almacenSesion: AlmacenMemoria({'jwt': ?token}),
         almacenLocal: AlmacenMemoria({'idioma': 'es'}),
         base: Uri.parse('http://localhost/'),
       )))!;

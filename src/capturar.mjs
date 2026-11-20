@@ -32,7 +32,7 @@ function pdfASvg(pdf, destino, { w, h, titulo, permitirBitmap = false }) {
   let svg = readFileSync(destino, "utf8");
   svg = svg.replace(/<svg ([^>]*?)width="[^"]*" height="[^"]*"/, `<svg role="img" aria-label="${titulo}" $1width="${w}" height="${h}"`);
   svg = svg.replace(/(<svg [^>]*>)/, `$1\n<title>${titulo}</title>`);
-  if (/<image\b|data:image/.test(svg)) {
+  if (!permitirBitmap && /<image\b|data:image/.test(svg)) {
     throw new Error(`El SVG contiene imágenes rasterizadas (¿sombras, filtros u opacidades?): ${destino}`);
   }
   writeFileSync(destino, svg);

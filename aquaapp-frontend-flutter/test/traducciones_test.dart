@@ -34,7 +34,7 @@ void main() {
     test('formatea números según el idioma', () async {
       final es = await Traducciones.cargar('es');
       final en = await Traducciones.cargar('en');
-      expect(es.numero(1234.5), '1234,5');
+      expect(es.numero(1234.5), '1.234,5');
       expect(en.numero(1234.5), '1,234.5');
       expect(es.numero(33.3), '33,3');
     });
