@@ -1,4 +1,4 @@
-# Actualizaciones mensuales, asignadas a augustocristian y etiquetadas por
+# Actualizaciones el día 1 de cada mes a las 03:00 (hora de Madrid), asignadas a augustocristian y etiquetadas por
 # framework (angular, react, flutter) y lenguaje (ts, js, dart, docker).
 # Las etiquetas deben existir en el repositorio: Dependabot no las crea.
 #
@@ -14,6 +14,8 @@ updates:
     directory: "/aquaapp-frontend-angular"
     schedule:
       interval: "monthly"
+      time: "03:00"
+      timezone: "Europe/Madrid"
     rebase-strategy: "auto"
     assignees: ["augustocristian"]
     labels: ["angular", "ts", "js", "dependencies"]
@@ -32,6 +34,8 @@ updates:
     directory: "/aquaapp-frontend-angular"
     schedule:
       interval: "monthly"
+      time: "03:00"
+      timezone: "Europe/Madrid"
     rebase-strategy: "auto"
     assignees: ["augustocristian"]
     labels: ["angular", "docker", "dependencies"]
@@ -45,6 +49,8 @@ updates:
     directory: "/aquaapp-frontend-react"
     schedule:
       interval: "monthly"
+      time: "03:00"
+      timezone: "Europe/Madrid"
     rebase-strategy: "auto"
     assignees: ["augustocristian"]
     labels: ["react", "ts", "js", "dependencies"]
@@ -59,6 +65,8 @@ updates:
     directory: "/aquaapp-frontend-react"
     schedule:
       interval: "monthly"
+      time: "03:00"
+      timezone: "Europe/Madrid"
     rebase-strategy: "auto"
     assignees: ["augustocristian"]
     labels: ["react", "docker", "dependencies"]
@@ -72,6 +80,8 @@ updates:
     directory: "/aquaapp-frontend-flutter"
     schedule:
       interval: "monthly"
+      time: "03:00"
+      timezone: "Europe/Madrid"
     rebase-strategy: "auto"
     assignees: ["augustocristian"]
     labels: ["flutter", "dart", "dependencies"]
@@ -91,6 +101,8 @@ updates:
     directory: "/aquaapp-frontend-flutter"
     schedule:
       interval: "monthly"
+      time: "03:00"
+      timezone: "Europe/Madrid"
     rebase-strategy: "auto"
     assignees: ["augustocristian"]
     labels: ["flutter", "docker", "dependencies"]
@@ -104,6 +116,8 @@ updates:
     directory: "/E2E"
     schedule:
       interval: "monthly"
+      time: "03:00"
+      timezone: "Europe/Madrid"
     rebase-strategy: "auto"
     assignees: ["augustocristian"]
     labels: ["e2e", "ts", "js", "dependencies"]
@@ -120,6 +134,8 @@ updates:
     directory: "/"
     schedule:
       interval: "monthly"
+      time: "03:00"
+      timezone: "Europe/Madrid"
     rebase-strategy: "auto"
     assignees: ["augustocristian"]
     labels: ["github-actions", "dependencies"]
