@@ -1,0 +1,49 @@
+# Backend y servicio de autenticación a partir de las imágenes PRIVADAS que
+# publica en GHCR el repositorio del backend (YYyy-tew-ZZ-UOXXXXX). Sirve para
+# desplegar el stack completo sin clonar ni compilar ese repositorio, p. ej. en
+# el workflow de pruebas de sistema (.github/workflows/e2e.yml):
+#
+#   echo $GHCR_TOKEN | docker login ghcr.io -u <usuario> --password-stdin
+#   docker compose -f docker-compose.backend.yml up -d --wait
+#   docker compose up -d --build            # los tres clientes (docker-compose.yml)
+#
+# Crea la red `aquaapp-network` a la que se unen los clientes. Es ALTERNATIVO al
+# compose del repositorio del backend (que crea la misma red): no arranques los
+# dos a la vez.
+#
+# Variables opcionales (ver .env.example): AUTH_IMAGE, BACKEND_IMAGE, JWT_SECRET,
+# BACKEND_PORT, AUTH_PORT.
+#
+# JWT_SECRET: valor de EJEMPLO docente (HS256 exige >= 32 caracteres) y el mismo
+# en auth y backend; en un despliegue real se inyecta desde un gestor de secretos.
+name: aquaapp-backend
+
+services:
+  auth:
+    image: ${AUTH_IMAGE:-ghcr.io/tew-uniovi/aquaapp-auth:latest}
+    environment:
+      - JWT_SECRET=${JWT_SECRET:-secreto-compartido-de-ejemplo-para-aquaapp-2627}
+    ports:
+      - "${AUTH_PORT:-9000}:9000"
+    networks: [aquaapp-network]
+
+  backend:
+    image: ${BACKEND_IMAGE:-ghcr.io/tew-uniovi/aquaapp-backend:latest}
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - JWT_SECRET=${JWT_SECRET:-secreto-compartido-de-ejemplo-para-aquaapp-2627}
+      - AUTH_URL=http://auth:9000
+    ports:
+      - "${BACKEND_PORT:-8080}:8080"
+    depends_on:
+      - auth
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8080/actuator/health | grep -q UP"]
+      interval: 15s
+      timeout: 3s
+      retries: 5
+    networks: [aquaapp-network]
+
+networks:
+  aquaapp-network:
+    name: aquaapp-network
