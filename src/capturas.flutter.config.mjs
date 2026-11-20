@@ -24,7 +24,7 @@ const TXT = {
     locale: "es-ES",
     filtro: "Filtrar por nombre", textoFiltro: "embalse de",
     usuario: "Usuario", entrar: "Entrar",
-    menuEmbalses: /Embalses/, nuevo: "Nuevo embalse",
+    nuevo: "Nuevo embalse",
     nombre: "Nombre", capacidad: "Capacidad (hm³)", nivel: "Nivel actual (hm³)", guardar: "Guardar",
     sinPermiso: "No tienes permiso para esta acción",
     pagina: /Página 1 de/,
@@ -40,7 +40,7 @@ const TXT = {
     locale: "en-US",
     filtro: "Filter by name", textoFiltro: "embalse de",
     usuario: "Username", entrar: "Log in",
-    menuEmbalses: /Reservoirs/, nuevo: "New reservoir",
+    nuevo: "New reservoir",
     nombre: "Name", capacidad: "Capacity (hm³)", nivel: "Current level (hm³)", guardar: "Save",
     sinPermiso: "You do not have permission for this action",
     pagina: /Page 1 of/,
@@ -96,11 +96,9 @@ async function escribir(page, etiqueta, texto) {
   await pausa(page, 250);
 }
 
-/** Menú Embalses > Nuevo embalse. */
+/** Botón flotante «Nuevo embalse» del listado (en móvil y en escritorio). */
 async function abrirFormulario(page) {
-  await page.getByRole("button", { name: TXT.menuEmbalses }).first().click();
-  await pausa(page);
-  await page.getByRole("menuitem", { name: TXT.nuevo }).click();
+  await page.getByRole("button", { name: TXT.nuevo }).click();
   await page.getByLabel(TXT.nombre, { exact: true }).waitFor();
   await page.waitForSelector("body[data-listo]");
   await pausa(page, 500);

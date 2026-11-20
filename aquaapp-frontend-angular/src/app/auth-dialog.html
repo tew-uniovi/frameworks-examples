@@ -51,13 +51,7 @@
   </mat-dialog-content>
 
   <mat-dialog-actions align="end">
-    <button
-      mat-button
-      type="button"
-      id="btnIrALogin"
-      class="cambio"
-      (click)="cambiarA('login')"
-    >
+    <button mat-button type="button" id="btnIrALogin" class="cambio" (click)="cambiarA('login')">
       {{ i18n.t('login.yaTienesCuenta') }} {{ i18n.t('login.iniciaSesion') }}
     </button>
     <button mat-button type="button" id="btnCancelar" mat-dialog-close>

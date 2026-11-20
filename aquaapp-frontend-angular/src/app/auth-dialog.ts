@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import {
   AbstractControl,
   NonNullableFormBuilder,
@@ -71,7 +66,6 @@ export class AuthDialog {
     this.formRegistro.controls.password.valueChanges.subscribe(() =>
       this.formRegistro.controls.password2.updateValueAndValidity(),
     );
-
   }
 
   /** Pasa de login a registro (o al revés) partiendo de un formulario limpio. */
@@ -107,7 +101,7 @@ export class AuthDialog {
       .registrar({ usuario, password })
       .pipe(finalize(() => this.cargando.set(false)))
       .subscribe({
-        next: () => this.vista.abrirModal('login'), // cuenta creada: ahora, a iniciar sesión
+        next: () => this.cambiarA('login'), // cuenta creada: ahora, a iniciar sesión
         error: () => this.error.set('login.errorRegistro'),
       });
   }

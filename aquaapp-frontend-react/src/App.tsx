@@ -161,7 +161,7 @@ export default function App() {
           {vista === 'formulario' && <FormularioView key={enEdicion?.id ?? 'nuevo'} embalse={enEdicion} onGuardar={guardar} />}
           {vista === 'errorAuth' && <ErrorAuthView onIrAlLogin={() => setModal('login')} />}
         </Box>
-        <Box component="aside" sx={{ width: { xs: '100%', md: (theme) => theme.spacing(32) }, flexShrink: 0 }}>
+        <Box component="aside" sx={(theme) => ({ width: { xs: '100%', md: theme.spacing(32) }, flexShrink: 0 })}>
           {vista === 'listado' && <PanelIndicadores embalses={datos.embalses} />}
         </Box>
       </Box>

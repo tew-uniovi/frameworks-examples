@@ -69,12 +69,14 @@ backend Spring Boot (embalses) y el servicio de autenticación en Rust, ambos de
 - **Login y registro** en un único diálogo modal; el JWT se guarda en `sessionStorage` (clave `jwt`), el usuario se
   lee del claim `sub` y la caducidad del claim `exp`.
 - **CRUD de embalses** contra `/api/embalses` con `Authorization: Bearer`: listado, alta, edición y borrado.
-- **Listado** con fecha de actualización formateada con `Intl`, filtro por nombre, paginación de 5 en 5 y panel
-  lateral con el número de embalses y el nivel medio.
+- **Listado** con fecha de actualización formateada con `Intl`, filtro por nombre, paginación de 5 en 5 (`TablePagination`)
+  y panel lateral con el número de embalses y el nivel medio.
 - **Formulario de alta/edición** incrustado en la página (no es un modal), con validación: el nivel actual no puede
   superar la capacidad.
 - **Gestión de errores de sesión y permisos**: un `401` inesperado limpia la sesión y muestra la vista «Sesión no
   válida»; un `403` (usuario `USER`, solo lectura) muestra «No tienes permiso para esta acción».
+- **Aspecto Material Design** con MUI: tema derivado del azul del logo, que sigue el modo claro u oscuro del sistema
+  (`prefers-color-scheme`), y tipografía Roboto autoalojada.
 - **Selector de idioma** (es/en): los textos se cargan en tiempo de ejecución desde `public/i18n/*.json` (los
   mismos ficheros del cliente original) y el idioma se recuerda en `localStorage`.
 - **Contenedor Docker** (multi-stage: Node → Nginx) que sirve la SPA bajo `/aquaapp/` y hace de proxy inverso de
@@ -95,8 +97,8 @@ Es una de las tres variantes del cliente (Angular, React y Flutter) que viven en
   <img src="img/captura-login-movil.svg" alt="Diálogo de inicio de sesión en móvil" width="162"/>
   <br/>
   <em><b>Figura 1 · Inicio de sesión.</b> Al arrancar sin token se abre el diálogo de login (<code>Dialog</code> de
-  MUI), compartido con el registro. Si las credenciales son válidas guarda el JWT y pasa al listado; si no, muestra
-  el error en el propio formulario.</em>
+  MUI con <code>DialogActions</code>: «Cancelar» y «Entrar»), compartido con el registro. Si las credenciales son
+  válidas guarda el JWT y pasa al listado; si no, muestra el error en el propio formulario.</em>
 </p>
 
 <p align="center">
@@ -104,9 +106,11 @@ Es una de las tres variantes del cliente (Angular, React y Flutter) que viven en
   &nbsp;
   <img src="img/captura-listado-filtro-movil.svg" alt="Listado de embalses filtrado por nombre en móvil" width="162"/>
   <br/>
-  <em><b>Figura 2 · Listado con filtro por nombre.</b> Tabla de embalses con filtro, paginación de 5 en 5, botones
-  de editar y eliminar (icono con <code>Tooltip</code> y <code>aria-label</code>) y, a la derecha, el panel
-  con el número de embalses y el nivel medio. En móvil el panel pasa debajo de la tabla y se oculta la columna Id.</em>
+  <em><b>Figura 2 · Listado con filtro por nombre.</b> Tabla de embalses con filtro, paginación de 5 en 5
+  (<code>TablePagination</code>, «Página X de Y» y flechas con nombre accesible), botones de editar y eliminar
+  (<code>IconButton</code> con <code>Tooltip</code> y <code>aria-label</code>) y, a la derecha, el panel con el
+  número de embalses y el nivel medio. En móvil el panel pasa debajo de la tabla, se oculta la columna Id y los
+  menús de la barra quedan reducidos a iconos con <code>Tooltip</code>.</em>
 </p>
 
 <p align="center">
@@ -124,8 +128,8 @@ Es una de las tres variantes del cliente (Angular, React y Flutter) que viven en
   <img src="img/captura-sin-permiso-movil.svg" alt="Aviso de falta de permiso al guardar con un usuario de solo lectura, en móvil" width="162"/>
   <br/>
   <em><b>Figura 4 · Permisos (403).</b> El usuario <code>ana</code> (rol <code>USER</code>, solo lectura) intenta
-  guardar un embalse: el backend responde 403 y el cliente muestra un <code>Snackbar</code> con «No tienes permiso
-  para esta acción».</em>
+  guardar un embalse: el backend responde 403 y el cliente muestra un <code>Snackbar</code> con un
+  <code>Alert</code> («No tienes permiso para esta acción») y un botón para cerrarlo.</em>
 </p>
 
 <p align="center">
@@ -174,8 +178,9 @@ Es una de las tres variantes del cliente (Angular, React y Flutter) que viven en
 - 📁 `context/` — `SesionProvider` (usuario y JWT) e `I18nProvider` (textos, idioma y formato `Intl`), con sus hooks `useSesion` y `useI18n`
 - 📁 `hooks/` — `useEmbalses` (datos y operaciones CRUD), `useListado` (filtro y paginación) y `useBodyListo` (atributo `data-listo`)
 - 📁 `utils/` — Lógica sin React, fácil de probar: lectura del JWT, idioma inicial y formatos, filtrado y paginación
-- 📁 `public/i18n/` — Los `es.json` y `en.json` del cliente original (más dos claves nuevas: `error.sinPermiso` y `error.servidor`)
+- 📁 `public/i18n/` — Los `es.json` y `en.json` del cliente original (más claves nuevas: `error.sinPermiso`, `error.servidor`, `comun.cerrar`, `comun.cancelar`, `nav.idioma` y `app.descripcion`)
 - 📁 `nginx/` — Plantilla de Nginx: estáticos bajo `/aquaapp/` y proxy de `/api/` y `/auth/`
+- 📄 `src/tema.ts` — Tema de MUI (`createTheme` con variables CSS y esquemas claro/oscuro) a partir del azul del logo
 - 📄 `Dockerfile` — Imagen multi-stage: `node` compila con Vite y `nginx:alpine` sirve el resultado
 - 📄 `vite.config.ts` — `base: '/aquaapp/'`, proxy de desarrollo (`/api`, `/auth`) y configuración de Vitest
 
@@ -310,12 +315,12 @@ Las **pruebas unitarias** (Vitest, entorno `jsdom`) cubren lo que tiene lógica 
 
 - `utils/jwt` — lectura del usuario (`sub`) y de la caducidad (`exp`) del token, incluidos tokens mal formados.
 - `utils/i18n` — idioma inicial (guardado o del navegador), traducción con clave ausente y formatos `Intl`.
-- `utils/listado` y `hooks/useListado` — filtro por nombre, paginación de 5 en 5, página fuera de rango y nivel medio.
+- `utils/listado` y `hooks/useListado` — filtro por nombre, paginación de 5 en 5 (página destino que entrega `TablePagination`, total filtrado), página fuera de rango y nivel medio.
 - `api/embalses` — método, ruta y cabecera `Authorization: Bearer` de cada operación (con `fetch` simulado), propagación del 403 y token caducado tratado como 401 sin llamar al servidor.
 - `views/FormularioView` — validación «nivel ≤ capacidad» y envío con `id: null` (alta) o con el `id` (edición).
 
-Además, el flujo completo (login, listado, alta, edición, borrado, cambio de idioma, 403 con `ana`, registro,
-401 y token caducado) se ha verificado en un Chrome real con Playwright contra el contenedor y el stack Spring.
+Además, el flujo completo (login, orden de tabulación del diálogo, listado, paginación, alta, edición, borrado, cambio de
+idioma, 403 con `ana`, registro, 401, token caducado y modo oscuro) se ha verificado en un Chrome real con Playwright contra el contenedor y el stack Spring.
 
 Las **pruebas de sistema** del cliente original (`aquaapp-webtest`, Selenium + Cucumber) son independientes del
 framework: solo necesitan una URL base. Esta variante conserva los identificadores que usan (`usuario`,
