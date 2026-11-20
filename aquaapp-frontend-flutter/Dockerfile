@@ -9,9 +9,12 @@ COPY assets ./assets
 COPY web ./web
 COPY lib ./lib
 RUN flutter build web --release --base-href /aquaapp/ --no-web-resources-cdn
+# Se descartan los simbolos de depuracion y las variantes skwasm de CanvasKit, que solo
+# usa una compilacion WebAssembly (--wasm): no hacen falta para servir la app.
+RUN find build/web/canvaskit -name "*.symbols" -delete && rm -f build/web/canvaskit/skwasm*
 
 # runtime: nginx sirve los estáticos y hace de proxy de /api y /auth
-FROM nginx:1.31.9-alpine
+FROM nginx:1.31.9-alpine-slim
 # Destinos del proxy; se pueden cambiar con `docker run -e` / environment del compose.
 ENV BACKEND_URL=http://backend:8080 \
     AUTH_URL=http://auth:9000 \
@@ -19,3 +22,5 @@ ENV BACKEND_URL=http://backend:8080 \
 COPY nginx/default.conf.template /etc/nginx/templates/default.conf.template
 COPY --from=build /app/build/web /usr/share/nginx/html/aquaapp
 EXPOSE 80
+HEALTHCHECK --interval=30s --timeout=3s --retries=3 \
+  CMD wget -q --spider http://127.0.0.1/aquaapp/ || exit 1

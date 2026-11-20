@@ -7,7 +7,7 @@ COPY . .
 RUN npx ng build --base-href /aquaapp/
 
 # Etapa 2: nginx sirve los estaticos bajo /aquaapp/ y hace de proxy de /api y /auth
-FROM nginx:1.31.9-alpine
+FROM nginx:1.31.9-alpine-slim
 ENV BACKEND_URL=http://backend:8080 \
     AUTH_URL=http://auth:9000
 COPY nginx/default.conf.template /etc/nginx/templates/default.conf.template
