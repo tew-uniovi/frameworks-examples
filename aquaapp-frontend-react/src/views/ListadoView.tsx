@@ -20,6 +20,9 @@ import SearchIcon from '@mui/icons-material/Search'
 import type { Embalse } from '../api/tipos'
 import { useI18n } from '../context/i18n'
 
+// En pantallas muy estrechas se oculta la columna Id para que quepan las acciones
+const ocultoEnMovil = { display: { xs: 'none', sm: 'table-cell' } }
+
 interface Props {
   visibles: Embalse[]
   cargando: boolean
@@ -79,7 +82,7 @@ export function ListadoView({
         <Table size="small">
           <TableHead>
             <TableRow sx={{ bgcolor: 'action.hover' }}>
-              <TableCell>{t('tabla.id')}</TableCell>
+              <TableCell sx={ocultoEnMovil}>{t('tabla.id')}</TableCell>
               <TableCell>{t('tabla.nombre')}</TableCell>
               <TableCell>{t('tabla.capacidad')}</TableCell>
               <TableCell>{t('tabla.nivel')}</TableCell>
@@ -89,7 +92,7 @@ export function ListadoView({
           <TableBody id="tabla-embalses">
             {visibles.map((e) => (
               <TableRow key={e.id} hover>
-                <TableCell>{e.id}</TableCell>
+                <TableCell sx={ocultoEnMovil}>{e.id}</TableCell>
                 <TableCell>{e.nombre}</TableCell>
                 <TableCell>{formatoNumero(e.capacidadHm3)}</TableCell>
                 <TableCell>{formatoNumero(e.nivelActualHm3)}</TableCell>

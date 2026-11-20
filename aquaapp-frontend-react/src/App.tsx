@@ -139,7 +139,7 @@ export default function App() {
           p: 3,
         }}
       >
-        <Box component="main" sx={{ flex: 1, minWidth: 0, width: '100%' }}>
+        <Box component="main" sx={{ flex: { md: 1 }, minWidth: 0, width: '100%' }}>
           {vista === 'listado' && (
             <ListadoView
               visibles={listado.visibles}

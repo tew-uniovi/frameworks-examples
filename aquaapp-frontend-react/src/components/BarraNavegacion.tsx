@@ -39,7 +39,7 @@ export function BarraNavegacion({ onListado, onAlta, onLogin, onRegistro, onLogo
     >
       <Toolbar>
         <Box component="a" href="#" sx={{ display: 'flex', mr: 2 }} aria-label="aquaapp">
-          <img src={logo} alt="aquaapp" style={{ height: '2.5rem' }} />
+          <img src={logo} alt="aquaapp" style={{ height: '3rem' }} />
         </Box>
 
         <Box sx={{ flexGrow: 1, display: 'flex' }}>
