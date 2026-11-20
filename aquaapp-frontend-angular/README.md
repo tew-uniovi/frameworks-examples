@@ -56,7 +56,6 @@
 - [Instalación y puesta en marcha](#instalación-y-puesta-en-marcha)
 - [Pruebas](#pruebas)
 - [Integración continua](#integración-continua)
-- [Decisiones de implementación](#decisiones-de-implementación)
 - [Licencia](#licencia)
 
 ## Descripción del proyecto
@@ -335,8 +334,8 @@ mvn verify -Pe2e -DbaseUrl=http://localhost:8081/aquaapp/
 
 Esas pruebas localizan los elementos por `id` (`usuario`, `password`, `btnLogin`, `modalAuth`, `tabla-embalses`,
 `menuEmbalses`, `btnAlta`, `nombre`, `capacidadHm3`, `nivelActualHm3`, `btnGuardar`), que esta variante conserva. En la última
-ejecución, contra esta aplicación, pasaron todas (login con credenciales incorrectas, alta de un embalse y los
-escenarios de sistema del listado). Además, el flujo completo se comprobó a mano con Playwright: login como `admin`,
+ejecución, contra esta aplicación, pasaron las 5 pruebas (`EmbalseAltaSystemTest`, `EmbalsesSystemTest` y los dos
+escenarios de Cucumber: alta correcta y login con credenciales incorrectas). Además, el flujo completo se comprobó a mano con Playwright: login como `admin`,
 listado, filtro, alta (incluida la validación del nivel), edición, borrado, cambio de idioma, registro con contraseñas
 distintas, `403` con `ana` y `401` con un token caducado, sin errores de consola salvo los propios `401`/`403`.
 
@@ -344,72 +343,6 @@ distintas, `403` con `ana` y `401` con un token caducado, sin errores de consola
 
 Esta variante todavía no tiene un *workflow* de GitHub Actions propio (en la raíz del repositorio solo hay
 configuración de Dependabot). Los comandos que debería ejecutar son `npm ci`, `npm test` y `npm run build`.
-
-## Decisiones de implementación
-
-> Solo se recogen las decisiones que **difieren del cliente original** (`aquaapp-cliente`: TypeScript sin
-> *framework*, Bootstrap 5 por CDN, vistas parciales HTML cargadas con `fetch`, `i18n` a mano y Node como servidor
-> estático y proxy de `/api`).
-
-### 1. Angular Material en lugar de Bootstrap
-
-El original usa Bootstrap 5 (CSS y JS por CDN). Esta variante usa **Angular Material** (Material Design 3) y *Material
-Icons*, ambos como dependencias npm (`@angular/material`, `@angular/cdk`, `material-icons`, `@fontsource/roboto`),
-**sin CDN**: tema, tipografías e iconos se empaquetan en la compilación. Cada elemento del original tiene su
-componente: barra y menús desplegables → `MatToolbar` + `MatMenu`; modal de login/registro → `MatDialog`; tabla y
-paginación → `MatTable` + `MatPaginator`; campos con validación → `MatFormField` + `MatInput`; el `403` → `MatSnackBar`;
-«Sesión no válida» y panel lateral → `MatCard`; iconos con `title` → `MatIcon` + `MatTooltip`. Los `id` del original
-(`usuario`, `password`, `btnLogin`, `filtro-nombre`, `tabla-embalses`, `menuEmbalses`, `btnAlta`, `btnGuardar`,
-`modalAuth`...) se conservan, pero el DOM interno es el de Material, no el de Bootstrap.
-
-### 2. *Signals* y servicios en lugar de `Model`/`View`/`Controller`
-
-El original reparte el estado entre tres clases y el DOM. Aquí cada responsabilidad es un servicio *singleton* con
-*signals* (`SesionService`, `EmbalseService`, `I18nService`, `VistaService`) y los componentes son funciones del estado:
-listado filtrado, página actual y panel son `computed`, y las plantillas usan `@if`/`@for`/`@switch`. La detección de
-cambios es *zoneless* y los componentes son `OnPush`. No se usa *router*, igual que el original (una sola URL).
-
-### 3. Interceptor funcional para el JWT
-
-`fetch` envuelto a mano (`apiFetch`) se sustituye por un `HttpInterceptorFn` que añade `Authorization: Bearer` a las
-peticiones a `/api/**`. Si el token está caducado según su claim `exp`, el interceptor responde con un `401` local sin
-llegar a enviar nada, y `VistaService` lo trata como cualquier `401`: limpia la sesión y muestra «Sesión no válida».
-
-### 4. nginx como proxy de `/api` y `/auth` (mismo origen)
-
-El original llamaba al servicio de autenticación directamente (`http://localhost:9000`) y usaba su propio `server.mjs`
-como proxy de `/api`. Aquí nginx proxifica **ambos** (`/auth/login` → `auth:9000/login`), de modo que el navegador solo
-habla con un origen y no hace falta configurar CORS. El cliente usa rutas absolutas (`/api/...`, `/auth/...`), que no
-dependen del `base href` (`/aquaapp/`).
-
-### 5. nginx resuelve el backend en tiempo de ejecución
-
-`proxy_pass` con una URL fija hace que nginx resuelva el nombre al arrancar y falle si el backend aún no existe. La
-plantilla usa `resolver 127.0.0.11` (DNS de Docker) y variables (`set $backend ...; proxy_pass $backend;`), con lo que
-el DNS se consulta en cada petición y el contenedor arranca aunque el stack Spring todavía no esté levantado. Las
-variables `BACKEND_URL` y `AUTH_URL` se inyectan con el `envsubst` del entrypoint de `nginx:alpine`.
-
-### 6. i18n por servicio, con las mismas claves
-
-`I18nService` carga `i18n/es.json` o `i18n/en.json` al arrancar (`provideAppInitializer`), guarda el idioma en
-`localStorage["idioma"]` (por defecto, según `navigator.language`) y expone `t()`, `numero()` y `fecha()` basados en
-`Intl`. Como los textos son un *signal*, al cambiar de idioma se vuelve a pintar todo sin código adicional, incluidas
-las etiquetas del paginador de Material (`MatPaginatorIntl` traducido). Se añadieron algunas claves que el original
-tenía escritas en el código o no necesitaba (`error.sinPermiso`, `error.generico`, `form.obligatorio`, `form.minimo`,
-`listado.vacio`).
-
-### 7. Formularios reactivos y avisos visibles
-
-El original validaba con la API de restricciones del navegador (`setCustomValidity`). Aquí se usan *Reactive Forms* con
-validadores (`required`, `min`, «el nivel no puede superar la capacidad», «las contraseñas coinciden») y `mat-error`.
-El mensaje del `403` («No tienes permiso para esta acción») en el original se escribía en un elemento que no existe en
-las vistas de listado y formulario, por lo que no llegaba a verse; aquí se muestra con `MatSnackBar`.
-
-### 8. `data-listo` en `<body>`
-
-La aplicación pone el atributo `data-listo` en `<body>` cuando la vista actual ya está pintada (listado con datos
-cargados, formulario, «Sesión no válida» o diálogo abierto) y lo quita al cambiar de vista. Lo usan los scripts de
-capturas (`body[data-listo]`) como señal de que se puede capturar.
 
 ## Licencia
 

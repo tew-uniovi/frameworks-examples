@@ -56,7 +56,6 @@
 - [Instalación y puesta en marcha](#instalación-y-puesta-en-marcha)
 - [Pruebas](#pruebas)
 - [Integración continua](#integración-continua)
-- [Decisiones de implementación](#decisiones-de-implementación)
 - [Licencia](#licencia)
 
 ## Descripción del proyecto
@@ -175,7 +174,7 @@ Es una de las tres variantes del cliente (Angular, React y Flutter) que viven en
 - 📁 `context/` — `SesionProvider` (usuario y JWT) e `I18nProvider` (textos, idioma y formato `Intl`), con sus hooks `useSesion` y `useI18n`
 - 📁 `hooks/` — `useEmbalses` (datos y operaciones CRUD), `useListado` (filtro y paginación) y `useBodyListo` (atributo `data-listo`)
 - 📁 `utils/` — Lógica sin React, fácil de probar: lectura del JWT, idioma inicial y formatos, filtrado y paginación
-- 📁 `public/i18n/` — Los `es.json` y `en.json` del cliente original (más dos claves nuevas, ver [Decisiones](#decisiones-de-implementación))
+- 📁 `public/i18n/` — Los `es.json` y `en.json` del cliente original (más dos claves nuevas: `error.sinPermiso` y `error.servidor`)
 - 📁 `nginx/` — Plantilla de Nginx: estáticos bajo `/aquaapp/` y proxy de `/api/` y `/auth/`
 - 📄 `Dockerfile` — Imagen multi-stage: `node` compila con Vite y `nginx:alpine` sirve el resultado
 - 📄 `vite.config.ts` — `base: '/aquaapp/'`, proxy de desarrollo (`/api`, `/auth`) y configuración de Vitest
@@ -329,76 +328,6 @@ ejecución no forma parte de las comprobaciones hechas aquí.
 
 Esta variante **todavía no tiene un workflow de GitHub Actions**. Cuando se añada, bastaría con `npm ci`,
 `npm run lint`, `npm test`, `npm run build` y la construcción de la imagen Docker.
-
-## Decisiones de implementación
-
-> Solo se recogen las decisiones que **difieren del cliente original** (HTML + TypeScript sin framework, Bootstrap
-> por CDN y clases `Model`/`View`/`Controller`).
-
-### 1. Material UI en lugar de Bootstrap
-
-El original usa Bootstrap 5 (CSS y JS por CDN) con atributos `data-bs-*` para desplegables, el menú plegable y el
-modal. Aquí se usa **Material UI** (el sistema de componentes más habitual del ecosistema React) con
-`@mui/icons-material` y la fuente Roboto autoalojada con `@fontsource/roboto` (sin CDN): `AppBar` + `Menu` para los
-menús Embalses/Cuenta/Idioma, `Dialog` para login y registro, `Table` para el listado, `TextField` con `error` y
-`helperText` para validar, `Button` con `loading` como indicador de carga, `Snackbar` + `Alert` para el 403 y
-`Card` para «sesión no válida». El tema (`tema.ts`) usa como color primario el azul del logo. El aspecto, por tanto,
-**no** es el de Bootstrap, pero la funcionalidad es la misma. En el menú, la barra se adapta a móvil dejando solo los
-iconos en lugar del botón «hamburguesa» del original.
-
-### 2. Contexto y *hooks* en lugar de `Model`/`View`/`Controller`
-
-El estado de sesión y el idioma viajan por **Context** (`SesionProvider`, `I18nProvider`) y los datos por
-*custom hooks* (`useEmbalses`, `useListado`), en lugar de clases con manejadores `onclick="controller..."`
-globales. El filtro y la página viven en `App` (no en la vista del listado), así que **se conservan** al ir al
-formulario y volver o al recargar tras una escritura, como hace el original; además, si tras borrar la página
-actual deja de existir, se acota a la última.
-
-### 3. Internacionalización por Context con los JSON del original
-
-`public/i18n/es.json` y `en.json` son los del original (mismas claves) y se cargan con `fetch` en tiempo de
-ejecución; `t()` devuelve la propia clave si falta. El idioma se guarda en `localStorage` (`idioma`) y, por defecto,
-sale de `navigator.language`. Los números y fechas usan `Intl`. Se han añadido **dos claves** (`error.sinPermiso` y
-`error.servidor`) porque el original dejaba «No tienes permiso para esta acción» fijo en español (y, de hecho, su
-formulario no llegaba a mostrarlo); aquí aparece traducido en un `Snackbar`.
-
-### 4. Proxy `/auth` en Nginx y resolución en tiempo de ejecución
-
-El original llama al servicio de autenticación directamente en `http://localhost:9000`. Esta variante hace
-`POST /auth/login` y `/auth/register` al **mismo origen** y Nginx los reenvía quitando el prefijo, igual que `/api/`:
-un solo origen, sin CORS y sin URL fijas en el código. Las URL de destino se resuelven **en cada petición**
-(`resolver 127.0.0.11` + `set $backend ...` + `proxy_pass $backend`), de modo que el contenedor arranca aunque
-el stack Spring todavía no esté levantado. Además, se usa `absolute_redirect off` para que las redirecciones no
-pierdan el puerto publicado (8082).
-
-### 4 bis. Cabecera de versión de la API
-
-Las rutas `/api/**` se versionan con la cabecera `X-API-Version`. El original no la envía (el backend asume `1.0`);
-este cliente la envía de forma explícita en todas las peticiones a la API.
-
-### 5. Gestión de errores con `ErrorApi`
-
-`apiFetch` adjunta el JWT y lanza `ErrorApi` (con el código HTTP) cuando la respuesta no es 2xx; si el token falta o
-ha caducado según el claim `exp`, lanza un 401 sin llegar a pedir nada. `App` decide: 401 → limpia la sesión y
-muestra «Sesión no válida»; 403 → aviso de permisos; cualquier otro fallo → aviso genérico. El payload del JWT se
-decodifica como *base64url* con UTF-8 (el original usa `atob` directamente).
-
-### 6. Validación con estado de React
-
-El original usa `setCustomValidity` + `reportValidity`. Aquí los campos obligatorios usan `required` (validación
-nativa) y las reglas propias (contraseñas distintas, nivel mayor que la capacidad) se pintan con `error` y
-`helperText` de MUI, y se limpian al editar el campo.
-
-### 7. `data-listo` en `<body>`
-
-Un *hook* (`useBodyListo`) pone `data-listo="<vista>"` en `<body>` cuando la vista actual está pintada (el listado,
-una vez cargados los datos) y lo quita al cambiar de vista. Lo usa el script de capturas como selector
-`body[data-listo]`.
-
-### 8. Al salir se vacía la pantalla
-
-Tras «Salir», el original deja el listado visible detrás del modal de login. Aquí se vacía la vista, para no
-mostrar datos de una sesión cerrada.
 
 ## Licencia
 
