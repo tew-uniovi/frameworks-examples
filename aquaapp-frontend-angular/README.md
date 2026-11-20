@@ -67,7 +67,7 @@ gestionar los embalses de una cuenca. El original es una SPA en HTML5, CSS3 y Ty
 (Material Design 3) en lugar de Bootstrap. Consume la API REST del backend Spring Boot y el servicio de
 autenticación en Rust de [`tew-profes-lab-spring`](https://github.com/tew-uniovi/tew-profes-lab-spring).
 
-- **Login y registro** en un único diálogo modal (`MatDialog`), con la sesión (JWT) guardada en `sessionStorage`.
+- **Login y registro** en un único diálogo modal (`MatDialog`, con las acciones «Cancelar» y la principal alineadas a la derecha), con la sesión (JWT) guardada en `sessionStorage`.
 - **CRUD de embalses**: listado, alta, edición y borrado contra `/api/embalses`, con el JWT en `Authorization: Bearer`.
 - **Listado** con fecha de actualización (`Intl`), filtro por nombre, paginación de 5 en 5 y panel lateral con el
   número de embalses y el nivel medio.
@@ -75,6 +75,7 @@ autenticación en Rust de [`tew-profes-lab-spring`](https://github.com/tew-uniov
   no puede superar la capacidad.
 - **Gestión de errores de sesión**: un `401` inesperado (o un token caducado según su claim `exp`) limpia la sesión y
   muestra la vista «Sesión no válida»; un `403` (usuario de solo lectura intentando escribir) muestra un aviso.
+- **Tema Material 3** (azul) con **modo claro y oscuro** según el sistema (`color-scheme: light dark`), tipografía Roboto e iconos Material, todo desde tokens `--mat-sys-*`.
 - **Selector de idioma** (es/en), con los textos cargados en tiempo de ejecución desde `public/i18n/*.json`
   (las mismas claves que el cliente original) y números y fechas formateados con `Intl`.
 - **Despliegue con Docker**: nginx sirve la SPA bajo `/aquaapp/` y hace de proxy inverso de `/api` y `/auth`, de modo
@@ -91,8 +92,9 @@ con la versión de **escritorio** (izquierda) y la de **móvil** (derecha).
   <img src="img/captura-login-movil.svg" alt="Diálogo de inicio de sesión en móvil" width="162"/>
   <br/>
   <em><b>Figura 1 · Inicio de sesión.</b> Sin token en <code>sessionStorage</code> la aplicación arranca con este
-  diálogo modal (<code>MatDialog</code>). Si las credenciales son válidas guarda el JWT y muestra el listado; si no,
-  indica el error en el propio formulario. Desde aquí también se accede al registro.</em>
+  diálogo modal (<code>MatDialog</code>). Siguiendo las convenciones de Material, el título va arriba, los campos en el contenido y,
+  en la fila de acciones, «Regístrate» a la izquierda y «Cancelar» y «Entrar» a la derecha. Si las credenciales son
+  válidas guarda el JWT y muestra el listado; si no, indica el error en el propio formulario.</em>
 </p>
 
 <p align="center">
@@ -100,9 +102,10 @@ con la versión de **escritorio** (izquierda) y la de **móvil** (derecha).
   &nbsp;
   <img src="img/captura-listado-filtro-movil.svg" alt="Listado de embalses filtrado por nombre en móvil" width="162"/>
   <br/>
-  <em><b>Figura 2 · Listado con filtro.</b> Tabla de embalses (<code>MatTable</code>) filtrada por nombre ("Tanes")
-  y paginada de 5 en 5 (<code>MatPaginator</code>), con la fecha de actualización y el panel lateral con los
-  indicadores (nº de embalses y nivel medio). Usuario <code>ana</code> (rol <code>USER</code>).</em>
+  <em><b>Figura 2 · Listado con filtro.</b> Título de la página con el botón «Nuevo embalse» y, dentro de una tarjeta
+  (<code>MatCard</code> con borde), el filtro por nombre ("Tanes") y la tabla de embalses (<code>MatTable</code>) paginada
+  de 5 en 5 (<code>MatPaginator</code>). A un lado, otra tarjeta hace de panel lateral con los indicadores (nº de embalses y
+  nivel medio). Usuario <code>ana</code> (rol <code>USER</code>).</em>
 </p>
 
 <p align="center">
@@ -110,8 +113,9 @@ con la versión de **escritorio** (izquierda) y la de **móvil** (derecha).
   &nbsp;
   <img src="img/captura-alta-movil.svg" alt="Formulario de alta de embalse con un error de validación en móvil" width="162"/>
   <br/>
-  <em><b>Figura 3 · Alta de embalse.</b> Formulario reactivo incrustado en la página. Aquí el nivel (40 hm³) supera
-  la capacidad (35,5 hm³): el formulario no se envía y se muestra el error junto al campo. El mismo formulario sirve
+  <em><b>Figura 3 · Alta de embalse.</b> Formulario reactivo en una tarjeta, con campos `outline`, la unidad (hm³) como sufijo y una ayuda
+  (<code>mat-hint</code>) bajo el nivel. Aquí el nivel (40 hm³) supera la capacidad (35,5 hm³): el formulario no se envía
+  y el error (<code>mat-error</code>) sustituye a la ayuda. El mismo formulario sirve
   para editar un embalse existente.</em>
 </p>
 
@@ -131,7 +135,7 @@ con la versión de **escritorio** (izquierda) y la de **móvil** (derecha).
   <img src="img/captura-error-403-movil.svg" alt="Aviso de permiso denegado al intentar guardar con un usuario de solo lectura, en móvil" width="162"/>
   <br/>
   <em><b>Figura 5 · Error 403.</b> Un usuario de solo lectura (<code>ana</code>) intenta guardar: el backend responde
-  <code>403</code> y la aplicación muestra el aviso «No tienes permiso para esta acción» (<code>MatSnackBar</code>)
+  <code>403</code> y la aplicación muestra el aviso «No tienes permiso para esta acción» (<code>MatSnackBar</code>, con la acción «Cerrar»)
   sin perder lo escrito en el formulario.</em>
 </p>
 
@@ -156,9 +160,9 @@ con la versión de **escritorio** (izquierda) y la de **móvil** (derecha).
 │   │   ├── 📄 auth.interceptor.ts                # Interceptor funcional: cabecera Bearer
 │   │   ├── 📄 modelos.ts                         # Interfaces Embalse y Credenciales
 │   │   └── 📄 *.spec.ts                          # Pruebas unitarias (Vitest)
-│   ├── 📄 index.html
+│   ├── 📄 index.html                             # title, description y theme-color (claro/oscuro)
 │   ├── 📄 main.ts
-│   └── 📄 styles.scss                            # Tema Material 3 (azul) y estilos globales
+│   └── 📄 styles.scss                            # Tema Material 3 (azul, claro/oscuro) y estilos globales
 ├── 📁 public/
 │   ├── 📁 i18n/                                  # es.json y en.json (claves del cliente original)
 │   ├── 📁 img/                                   # Logo de aquaapp
@@ -183,7 +187,7 @@ con la versión de **escritorio** (izquierda) y la de **móvil** (derecha).
 - 📄 `i18n.service.ts` — Carga `public/i18n/<idioma>.json` con `fetch` del `HttpClient`; el idioma se guarda en
   `localStorage["idioma"]`.
 - 📁 `public/i18n/` — Los mismos `es.json` y `en.json` del cliente original, con unas pocas claves nuevas
-  (`error.sinPermiso`, `error.generico`, `form.obligatorio`, `form.minimo`, `listado.vacio`).
+  (`comun.*`, `error.*`, `form.obligatorio`, `form.minimo`, `form.nivelAyuda`, `listado.vacio`, `listado.porPagina`, `listado.primera`, `listado.ultima`, `nav.idioma`; el pie está en minúscula tras la primera palabra, como pide Material) para que no quede ningún texto fijo en las plantillas.
 - 📄 `nginx/default.conf.template` — Plantilla de nginx; el contenedor sustituye `BACKEND_URL` y `AUTH_URL` al
   arrancar.
 - 📄 `proxy.conf.json` — Reenvía `/api` y `/auth` durante el desarrollo con `npm start`.
@@ -333,11 +337,15 @@ mvn verify -Pe2e -DbaseUrl=http://localhost:8081/aquaapp/
 ```
 
 Esas pruebas localizan los elementos por `id` (`usuario`, `password`, `btnLogin`, `modalAuth`, `tabla-embalses`,
-`menuEmbalses`, `btnAlta`, `nombre`, `capacidadHm3`, `nivelActualHm3`, `btnGuardar`), que esta variante conserva. En la última
-ejecución, contra esta aplicación, pasaron las 5 pruebas (`EmbalseAltaSystemTest`, `EmbalsesSystemTest` y los dos
-escenarios de Cucumber: alta correcta y login con credenciales incorrectas). Además, el flujo completo se comprobó a mano con Playwright: login como `admin`,
-listado, filtro, alta (incluida la validación del nivel), edición, borrado, cambio de idioma, registro con contraseñas
-distintas, `403` con `ana` y `401` con un token caducado, sin errores de consola salvo los propios `401`/`403`.
+`menuEmbalses`, `btnAlta`, `nombre`, `capacidadHm3`, `nivelActualHm3`, `btnGuardar`), que esta variante conserva. Con la base de datos de semilla (menos de 5 embalses) pasan las 5 pruebas
+(`EmbalseAltaSystemTest`, `EmbalsesSystemTest` y los dos escenarios de Cucumber: alta correcta y login con credenciales
+incorrectas). Ojo: el listado pagina de 5 en 5 (como el original), así que si la base de datos tiene más de 5 embalses el
+embalse recién creado cae en la segunda página y `EmbalseAltaSystemTest` no lo encuentra en la tabla.
+
+Además, el flujo completo se comprobó con Playwright: login como `admin`, listado, filtro, alta (incluida la validación
+del nivel), edición, borrado, cambio de idioma (y de `<html lang>`), registro con contraseñas distintas, `403` con `ana`
+(snackbar y su acción «Cerrar»), `401` con un token caducado, orden del tabulador y trampa de foco en el diálogo, cierre
+con «Cancelar» y con Esc, y modo oscuro, sin errores de consola salvo los propios `401`/`403`.
 
 ## Integración continua
 
