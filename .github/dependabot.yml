@@ -1,0 +1,32 @@
+# Actualizaciones mensuales de dependencias, una entrada por (ecosistema, directorio).
+version: 2
+updates:
+  # --- Angular ---------------------------------------------------------------
+  - package-ecosystem: "npm"
+    directory: "/aquaapp-frontend-angular"
+    schedule:
+      interval: "monthly"
+  - package-ecosystem: "docker"
+    directory: "/aquaapp-frontend-angular"
+    schedule:
+      interval: "monthly"
+
+  # --- React -----------------------------------------------------------------
+  - package-ecosystem: "npm"
+    directory: "/aquaapp-frontend-react"
+    schedule:
+      interval: "monthly"
+  - package-ecosystem: "docker"
+    directory: "/aquaapp-frontend-react"
+    schedule:
+      interval: "monthly"
+
+  # --- Flutter ---------------------------------------------------------------
+  - package-ecosystem: "pub"
+    directory: "/aquaapp-frontend-flutter"
+    schedule:
+      interval: "monthly"
+  - package-ecosystem: "docker"
+    directory: "/aquaapp-frontend-flutter"
+    schedule:
+      interval: "monthly"

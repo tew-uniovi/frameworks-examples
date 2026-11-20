@@ -1,0 +1,28 @@
+name: aquaapp_frontend
+description: Cliente web de Aquaapp (gestión de embalses) hecho con Flutter Web.
+publish_to: none
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.12.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  flutter_svg: ^2.5.0
+  http: ^1.6.0
+  intl: ^0.20.2
+  web: ^1.1.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/aquaapp-logo-horizontal.svg
+    - assets/i18n/

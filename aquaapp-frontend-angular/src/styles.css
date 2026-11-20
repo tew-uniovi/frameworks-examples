@@ -1,0 +1,19 @@
+/* Bootstrap y Bootstrap Icons se cargan desde angular.json (dependencias npm). */
+
+app-root,
+app-navbar,
+app-listado,
+app-formulario,
+app-error-auth,
+app-panel {
+  display: block;
+}
+
+table th,
+table td {
+  border-bottom: 1px solid var(--bs-border-color, #dee2e6);
+}
+
+.logo-cabecera {
+  height: 2.5rem;
+}
