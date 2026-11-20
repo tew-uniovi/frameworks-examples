@@ -15,7 +15,7 @@ void avisarResultado(ScaffoldMessengerState mensajero, AppEstado estado, Resulta
   mensajero
     ..hideCurrentSnackBar()
     ..showSnackBar(SnackBar(
-      content: Text(estado.t(clave)),
+      content: Semantics(identifier: 'aviso', child: Text(estado.t(clave))),
       action: SnackBarAction(
         label: estado.t('comun.cerrar'),
         onPressed: () {}, // pulsar la acción ya descarta el SnackBar

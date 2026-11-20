@@ -321,7 +321,13 @@ Las **pruebas unitarias** (Vitest, entorno `jsdom`) cubren lo que tiene lógica 
 Además, el flujo completo (login, orden de tabulación del diálogo, listado, paginación, alta, edición, borrado, cambio de
 idioma, 403 con `ana`, registro, 401, token caducado y modo oscuro) se ha verificado en un Chrome real con Playwright contra el contenedor y el stack Spring.
 
-Las **pruebas de sistema** del cliente original (`aquaapp-webtest`, Selenium + Cucumber) son independientes del
+Las **pruebas de sistema** de esta variante viven en la carpeta [`E2E/`](../E2E) de la raíz del repositorio: una única suite de Playwright que se ejecuta igual contra los tres clientes (Angular, React y Flutter). Para ello el cliente expone atributos `data-testid` (`menu-sesion`, `auth-usuario`, `auth-enviar`, `listado-tabla`, `fila-embalse-<id>`, `form-guardar`, `aviso`...) en los elementos con los que interactúa la suite, sin quitar los `id` existentes. Con el stack levantado (`docker compose up -d --build` en la raíz):
+
+```bash
+cd E2E && npm ci && npx playwright test --project=react
+```
+
+Las pruebas de sistema del cliente original (`aquaapp-webtest`, Selenium + Cucumber) son independientes del
 framework: solo necesitan una URL base. Esta variante conserva los identificadores que usan (`usuario`,
 `password`, `btnLogin`, `menuEmbalses`, `btnAlta`, `nombre`, `capacidadHm3`, `nivelActualHm3`, `btnGuardar`,
 `tabla-embalses`, `mensaje-error`...), de modo que se pueden apuntar a ella con

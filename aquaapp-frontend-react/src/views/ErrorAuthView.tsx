@@ -11,7 +11,7 @@ import { useI18n } from '../context/i18n'
 export function ErrorAuthView({ onIrAlLogin }: { onIrAlLogin: () => void }) {
   const { t } = useI18n()
   return (
-    <Container maxWidth="xs" disableGutters sx={{ mt: 5 }}>
+    <Container maxWidth="xs" disableGutters sx={{ mt: 5 }} data-testid="sesion-no-valida">
       <Card variant="outlined">
         <CardContent>
           <Typography variant="h5" component="h3" gutterBottom>

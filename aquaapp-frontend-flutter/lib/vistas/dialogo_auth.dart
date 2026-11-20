@@ -106,7 +106,7 @@ class _DialogoAuthState extends State<DialogoAuth> {
     final tema = Theme.of(context);
     final esLogin = _modo == ModoAuth.login;
 
-    return AlertDialog(
+    final dialogo = AlertDialog(
       title: Text(esLogin ? estado.t('login.title') : estado.t('login.registroTitle')),
       scrollable: true,
       content: SizedBox(
@@ -118,7 +118,7 @@ class _DialogoAuthState extends State<DialogoAuth> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const SizedBox(height: 8),
-              TextFormField(
+              _conId('auth-usuario', TextFormField(
                 key: const Key('campo-usuario'),
                 controller: _usuario,
                 autofocus: true,
@@ -130,9 +130,9 @@ class _DialogoAuthState extends State<DialogoAuth> {
                 validator: (v) => (v == null || v.trim().isEmpty)
                     ? estado.t('validacion.obligatorio')
                     : null,
-              ),
+              )),
               const SizedBox(height: 16),
-              TextFormField(
+              _conId('auth-password', TextFormField(
                 key: const Key('campo-password'),
                 controller: _password,
                 obscureText: true,
@@ -145,10 +145,10 @@ class _DialogoAuthState extends State<DialogoAuth> {
                 validator: (v) => (v == null || v.isEmpty)
                     ? estado.t('validacion.obligatorio')
                     : null,
-              ),
+              )),
               if (!esLogin) ...[
                 const SizedBox(height: 16),
-                TextFormField(
+                _conId('auth-password2', TextFormField(
                   key: const Key('campo-password2'),
                   controller: _password2,
                   obscureText: true,
@@ -158,17 +158,23 @@ class _DialogoAuthState extends State<DialogoAuth> {
                     labelText: estado.t('login.password2'),
                     prefixIcon: const Icon(Icons.lock_reset),
                   ),
+                  // «Las contraseñas no coinciden» también es un error de la pantalla
+                  // de autenticación: se identifica como `auth-error`.
+                  errorBuilder: (context, texto) => texto ==
+                          estado.t('login.passwordsNoCoinciden')
+                      ? Semantics(identifier: 'auth-error', child: Text(texto))
+                      : Text(texto),
                   validator: (v) {
                     if (v == null || v.isEmpty) return estado.t('validacion.obligatorio');
                     return v != _password.text ? estado.t('login.passwordsNoCoinciden') : null;
                   },
-                ),
+                )),
               ],
               if (_error != null) ...[
                 const SizedBox(height: 12),
                 Semantics(
                   liveRegion: true,
-                  identifier: 'mensaje-error',
+                  identifier: 'auth-error',
                   child: Text(
                     _error!,
                     style: tema.textTheme.bodyMedium?.copyWith(color: tema.colorScheme.error),
@@ -184,12 +190,12 @@ class _DialogoAuthState extends State<DialogoAuth> {
                     style: tema.textTheme.bodyMedium
                         ?.copyWith(color: tema.colorScheme.onSurfaceVariant),
                   ),
-                  TextButton(
+                  _conId('auth-cambiar', TextButton(
                     onPressed: _enviando
                         ? null
                         : () => _cambiarModo(esLogin ? ModoAuth.registro : ModoAuth.login),
                     child: Text(esLogin ? estado.t('login.registrate') : estado.t('login.iniciaSesion')),
-                  ),
+                  )),
                 ],
               ),
             ],
@@ -197,12 +203,12 @@ class _DialogoAuthState extends State<DialogoAuth> {
         ),
       ),
       actions: [
-        TextButton(
+        _conId('auth-cancelar', TextButton(
           key: const Key('boton-cancelar-auth'),
           onPressed: () => Navigator.of(context).pop(),
           child: Text(estado.t('comun.cancelar')),
-        ),
-        FilledButton(
+        )),
+        _conId('auth-enviar', FilledButton(
           key: const Key('boton-enviar-auth'),
           onPressed: _enviando ? null : _enviar,
           child: Row(
@@ -221,8 +227,15 @@ class _DialogoAuthState extends State<DialogoAuth> {
               Text(esLogin ? estado.t('login.entrar') : estado.t('login.crearCuenta')),
             ],
           ),
-        ),
+        )),
       ],
     );
+    // Identificador estable del contenedor del diálogo (lo usan las pruebas E2E).
+    return Semantics(identifier: 'auth-dialogo', container: true, child: dialogo);
   }
+
+  /// Identificador de prueba: en Flutter Web se vuelca al DOM de semántica
+  /// como atributo `flt-semantics-identifier`.
+  Widget _conId(String identificador, Widget hijo) =>
+      Semantics(identifier: identificador, child: hijo);
 }

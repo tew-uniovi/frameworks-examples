@@ -38,6 +38,7 @@ function passwordsIguales(repetida: AbstractControl): ValidationErrors | null {
     MatIconModule,
     MatProgressSpinnerModule,
   ],
+  host: { 'data-testid': 'auth-dialogo' },
   templateUrl: './auth-dialog.html',
   styleUrl: './auth-dialog.css',
 })

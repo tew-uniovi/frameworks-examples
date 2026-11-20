@@ -58,17 +58,18 @@ export function BarraNavegacion({ onListado, onAlta, onLogin, onRegistro, onLogo
           {conSesion && (
             <MenuBoton
               id="menuEmbalses"
+              testId="menu-embalses"
               icono={<WaterDropIcon />}
               etiqueta={t('nav.embalses')}
               ariaLabel={t('nav.embalses')}
             >
-              <MenuItem id="btnListado" onClick={onListado}>
+              <MenuItem id="btnListado" data-testid="menu-listado" onClick={onListado}>
                 <ListItemIcon>
                   <ViewListIcon fontSize="small" />
                 </ListItemIcon>
                 {t('nav.listado')}
               </MenuItem>
-              <MenuItem id="btnAlta" onClick={onAlta}>
+              <MenuItem id="btnAlta" data-testid="menu-nuevo" onClick={onAlta}>
                 <ListItemIcon>
                   <AddIcon fontSize="small" />
                 </ListItemIcon>
@@ -80,13 +81,14 @@ export function BarraNavegacion({ onListado, onAlta, onLogin, onRegistro, onLogo
 
         <MenuBoton
           id="menuSesion"
+          testId="menu-sesion"
           alinearDerecha
           icono={<AccountCircleIcon />}
           etiqueta={<span id="saludo">{usuario ? `${t('nav.hola')}, ${usuario}` : t('nav.cuenta')}</span>}
           ariaLabel={usuario ? `${t('nav.hola')}, ${usuario}` : t('nav.cuenta')}
         >
           {conSesion ? (
-            <MenuItem id="btnLogout" onClick={onLogout}>
+            <MenuItem id="btnLogout" data-testid="menu-logout" onClick={onLogout}>
               <ListItemIcon>
                 <LogoutIcon fontSize="small" />
               </ListItemIcon>
@@ -94,13 +96,13 @@ export function BarraNavegacion({ onListado, onAlta, onLogin, onRegistro, onLogo
             </MenuItem>
           ) : (
             [
-              <MenuItem key="login" id="btnMenuLogin" onClick={onLogin}>
+              <MenuItem key="login" id="btnMenuLogin" data-testid="menu-login" onClick={onLogin}>
                 <ListItemIcon>
                   <LoginIcon fontSize="small" />
                 </ListItemIcon>
                 {t('login.title')}
               </MenuItem>,
-              <MenuItem key="registro" id="btnMenuRegistro" onClick={onRegistro}>
+              <MenuItem key="registro" id="btnMenuRegistro" data-testid="menu-registro" onClick={onRegistro}>
                 <ListItemIcon>
                   <PersonAddIcon fontSize="small" />
                 </ListItemIcon>
@@ -112,6 +114,7 @@ export function BarraNavegacion({ onListado, onAlta, onLogin, onRegistro, onLogo
 
         <MenuBoton
           id="menuIdioma"
+          testId="menu-idioma"
           alinearDerecha
           icono={<TranslateIcon />}
           etiqueta={<span id="idiomaActivo">{idioma.toUpperCase()}</span>}

@@ -95,7 +95,7 @@ class _VistaFormularioState extends State<VistaFormulario> {
             spacing: 16,
             runSpacing: 20,
             children: [
-              campo(TextFormField(
+              campo(Semantics(identifier: 'form-nombre', child: TextFormField(
                 key: const Key('campo-nombre'),
                 controller: _nombre,
                 textInputAction: TextInputAction.next,
@@ -107,8 +107,8 @@ class _VistaFormularioState extends State<VistaFormulario> {
                 validator: (v) => (v == null || v.trim().isEmpty)
                     ? t('validacion.obligatorio')
                     : null,
-              )),
-              campo(TextFormField(
+              ))),
+              campo(Semantics(identifier: 'form-capacidad', child: TextFormField(
                 key: const Key('campo-capacidad'),
                 controller: _capacidad,
                 keyboardType:
@@ -120,8 +120,8 @@ class _VistaFormularioState extends State<VistaFormulario> {
                   prefixIcon: const Icon(Icons.storage_outlined),
                 ),
                 validator: numeroValido,
-              )),
-              campo(TextFormField(
+              ))),
+              campo(Semantics(identifier: 'form-nivel', child: TextFormField(
                 key: const Key('campo-nivel'),
                 controller: _nivel,
                 keyboardType:
@@ -142,11 +142,13 @@ class _VistaFormularioState extends State<VistaFormulario> {
                       ? t('form.nivelSuperaCapacidad')
                       : null;
                 },
-              )),
+              ))),
             ],
           ),
           const SizedBox(height: 24),
-          FilledButton.icon(
+          Semantics(
+            identifier: 'form-guardar',
+            child: FilledButton.icon(
             key: const Key('boton-guardar'),
             onPressed: estado.guardando ? null : _guardar,
             icon: estado.guardando
@@ -159,7 +161,7 @@ class _VistaFormularioState extends State<VistaFormulario> {
                   )
                 : const Icon(Icons.save_outlined),
             label: Text(t('form.guardar')),
-          ),
+          )),
         ],
       ),
     );

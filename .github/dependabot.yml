@@ -98,3 +98,32 @@ updates:
       imagenes-docker:
         patterns: ["*"]
         update-types: ["minor", "patch"]
+
+  # --- Pruebas de sistema (Playwright) ----------------------------------------
+  - package-ecosystem: "npm"
+    directory: "/E2E"
+    schedule:
+      interval: "monthly"
+    rebase-strategy: "auto"
+    assignees: ["augustocristian"]
+    labels: ["e2e", "ts", "js", "dependencies"]
+    groups:
+      playwright:
+        patterns: ["@playwright/*", "playwright*"]
+        update-types: ["minor", "patch"]
+      otras-dependencias:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
+
+  # --- Workflows de GitHub Actions ---------------------------------------------
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    rebase-strategy: "auto"
+    assignees: ["augustocristian"]
+    labels: ["github-actions", "dependencies"]
+    groups:
+      acciones:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]

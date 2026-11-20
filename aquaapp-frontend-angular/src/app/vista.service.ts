@@ -1,4 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
+import { DOCUMENT } from '@angular/common';
 import { inject, Injectable, signal } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { EmbalseService } from './embalse.service';
@@ -20,6 +21,7 @@ export class VistaService {
   private readonly embalses = inject(EmbalseService);
   private readonly i18n = inject(I18nService);
   private readonly snackBar = inject(MatSnackBar);
+  private readonly documento = inject(DOCUMENT);
 
   readonly vista = signal<Vista>('ninguna');
   /** Diálogo de autenticación abierto (login o registro) o null. */
@@ -93,6 +95,14 @@ export class VistaService {
   }
 
   private avisar(clave: string): void {
-    this.snackBar.open(this.i18n.t(clave), this.i18n.t('comun.cerrar'), { duration: 8000 });
+    const ref = this.snackBar.open(this.i18n.t(clave), this.i18n.t('comun.cerrar'), {
+      duration: 8000,
+    });
+    // MatSnackBar no permite atributos propios en su contenedor: se marca al abrirse (pruebas de sistema).
+    ref.afterOpened().subscribe(() => {
+      this.documento
+        .querySelector('.mat-mdc-snack-bar-container')
+        ?.setAttribute('data-testid', 'aviso');
+    });
   }
 }

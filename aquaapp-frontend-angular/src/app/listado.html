@@ -25,6 +25,7 @@
         matInput
         type="text"
         id="filtro-nombre"
+        data-testid="listado-filtro"
         [value]="embalses.filtro()"
         (input)="filtrar($event)"
       />
@@ -40,7 +41,7 @@
       </div>
     } @else {
       <div class="tabla-contenedor">
-        <table mat-table [dataSource]="embalses.paginaActual()" id="tabla-embalses">
+        <table mat-table [dataSource]="embalses.paginaActual()" id="tabla-embalses" data-testid="listado-tabla">
           <ng-container matColumnDef="id">
             <th mat-header-cell *matHeaderCellDef>{{ i18n.t('tabla.id') }}</th>
             <td mat-cell *matCellDef="let e">{{ e.id }}</td>
@@ -64,6 +65,7 @@
                 mat-icon-button
                 type="button"
                 class="btn-editar"
+                [attr.data-testid]="'editar-embalse-' + e.id"
                 [matTooltip]="i18n.t('tabla.editar')"
                 [attr.aria-label]="i18n.t('tabla.editar')"
                 (click)="editar(e)"
@@ -74,6 +76,7 @@
                 mat-icon-button
                 type="button"
                 class="btn-eliminar"
+                [attr.data-testid]="'eliminar-embalse-' + e.id"
                 [matTooltip]="i18n.t('tabla.eliminar')"
                 [attr.aria-label]="i18n.t('tabla.eliminar')"
                 (click)="eliminar(e)"
@@ -84,7 +87,11 @@
           </ng-container>
 
           <tr mat-header-row *matHeaderRowDef="columnas"></tr>
-          <tr mat-row *matRowDef="let fila; columns: columnas"></tr>
+          <tr
+            mat-row
+            *matRowDef="let fila; columns: columnas"
+            [attr.data-testid]="'fila-embalse-' + fila.id"
+          ></tr>
           <tr class="mat-row sin-datos" *matNoDataRow>
             <td class="mat-cell" [attr.colspan]="columnas.length">
               {{ i18n.t('listado.vacio') }}

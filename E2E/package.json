@@ -1,0 +1,19 @@
+{
+  "name": "aquaapp-e2e",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Pruebas de sistema (Playwright) de los tres clientes de aquaapp: Angular, React y Flutter",
+  "type": "module",
+  "scripts": {
+    "test": "playwright test",
+    "test:angular": "playwright test --project=angular",
+    "test:react": "playwright test --project=react",
+    "test:flutter": "playwright test --project=flutter",
+    "report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.65.1",
+    "@types/node": "^24.0.0",
+    "typescript": "^7.0.2"
+  }
+}

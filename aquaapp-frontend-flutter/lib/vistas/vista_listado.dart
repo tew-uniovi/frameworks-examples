@@ -61,7 +61,7 @@ class _VistaListadoState extends State<VistaListado> {
             ),
           ),
         Semantics(
-          identifier: 'filtro-nombre',
+          identifier: 'listado-filtro',
           child: TextField(
             controller: _filtro,
             onChanged: estado.filtrarPor,
@@ -72,10 +72,13 @@ class _VistaListadoState extends State<VistaListado> {
           ),
         ),
         const SizedBox(height: 16),
-        if (Pantalla.esCompacta(context))
-          _ListaEmbalses(onEditar: _editar, onEliminar: _eliminar)
-        else
-          _TablaEmbalses(onEditar: _editar, onEliminar: _eliminar),
+        Semantics(
+          identifier: 'listado-tabla',
+          container: true,
+          child: Pantalla.esCompacta(context)
+              ? _ListaEmbalses(onEditar: _editar, onEliminar: _eliminar)
+              : _TablaEmbalses(onEditar: _editar, onEliminar: _eliminar),
+        ),
         const SizedBox(height: 8),
         const _Paginador(),
       ],
@@ -101,17 +104,23 @@ class _Acciones extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        IconButton(
-          key: Key('editar-${embalse.id}'),
-          icon: const Icon(Icons.edit_outlined),
-          tooltip: estado.t('tabla.editar'),
-          onPressed: () => onEditar(embalse),
+        Semantics(
+          identifier: 'editar-embalse-${embalse.id}',
+          child: IconButton(
+            key: Key('editar-${embalse.id}'),
+            icon: const Icon(Icons.edit_outlined),
+            tooltip: estado.t('tabla.editar'),
+            onPressed: () => onEditar(embalse),
+          ),
         ),
-        IconButton(
-          key: Key('eliminar-${embalse.id}'),
-          icon: Icon(Icons.delete_outline, color: Theme.of(context).colorScheme.error),
-          tooltip: estado.t('tabla.eliminar'),
-          onPressed: estado.guardando ? null : () => onEliminar(embalse),
+        Semantics(
+          identifier: 'eliminar-embalse-${embalse.id}',
+          child: IconButton(
+            key: Key('eliminar-${embalse.id}'),
+            icon: Icon(Icons.delete_outline, color: Theme.of(context).colorScheme.error),
+            tooltip: estado.t('tabla.eliminar'),
+            onPressed: estado.guardando ? null : () => onEliminar(embalse),
+          ),
         ),
       ],
     );
@@ -141,7 +150,10 @@ class _TablaEmbalses extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           child: ConstrainedBox(
             constraints: BoxConstraints(minWidth: restricciones.maxWidth),
+            // La clave (los ids de la página) recrea la tabla al cambiar las filas:
+            // sin ella, tras filtrar, Flutter Web deja el DOM de semántica sin filas.
             child: DataTable(
+              key: ValueKey(estado.paginaActual.map((e) => e.id).join(',')),
               headingRowColor:
                   WidgetStatePropertyAll(tema.colorScheme.surfaceContainerHighest),
               columns: [
@@ -156,10 +168,23 @@ class _TablaEmbalses extends StatelessWidget {
                   DataRow(
                     key: ValueKey(e.id),
                     cells: [
-                      DataCell(Text('${e.id}')),
-                      DataCell(Text(e.nombre)),
-                      DataCell(Text(estado.i18n.numero(e.capacidadHm3))),
-                      DataCell(Text(estado.i18n.numero(e.nivelActualHm3))),
+                      // Un DataRow no es un widget: el identificador de la fila
+                      // va en su primera celda, con el texto de toda la fila
+                      // (las demás celdas se excluyen para no duplicarlo).
+                      DataCell(Semantics(
+                        identifier: 'fila-embalse-${e.id}',
+                        container: true,
+                        excludeSemantics: true,
+                        label: '${e.id}, ${e.nombre}, '
+                            '${estado.t('tabla.capacidad')} ${estado.i18n.numero(e.capacidadHm3)}, '
+                            '${estado.t('tabla.nivel')} ${estado.i18n.numero(e.nivelActualHm3)}',
+                        child: Text('${e.id}'),
+                      )),
+                      DataCell(ExcludeSemantics(child: Text(e.nombre))),
+                      DataCell(ExcludeSemantics(
+                          child: Text(estado.i18n.numero(e.capacidadHm3)))),
+                      DataCell(ExcludeSemantics(
+                          child: Text(estado.i18n.numero(e.nivelActualHm3)))),
                       DataCell(_Acciones(
                           embalse: e, onEditar: onEditar, onEliminar: onEliminar)),
                     ],
@@ -196,11 +221,23 @@ class _ListaEmbalses extends StatelessWidget {
               side: BorderSide(color: tema.colorScheme.outlineVariant),
             ),
             child: ListTile(
-              title: Text(e.nombre),
-              subtitle: Text(
-                '${estado.t('tabla.id')} ${e.id}\n'
-                '${estado.t('tabla.capacidad')}: ${estado.i18n.numero(e.capacidadHm3)}\n'
-                '${estado.t('tabla.nivel')}: ${estado.i18n.numero(e.nivelActualHm3)}',
+              // El identificador de la fila va en el título, con el texto de toda
+              // la tarjeta; los botones del final siguen siendo nodos propios.
+              title: Semantics(
+                identifier: 'fila-embalse-${e.id}',
+                container: true,
+                excludeSemantics: true,
+                label: '${e.nombre}, ${estado.t('tabla.id')} ${e.id}, '
+                    '${estado.t('tabla.capacidad')} ${estado.i18n.numero(e.capacidadHm3)}, '
+                    '${estado.t('tabla.nivel')} ${estado.i18n.numero(e.nivelActualHm3)}',
+                child: Text(e.nombre),
+              ),
+              subtitle: ExcludeSemantics(
+                child: Text(
+                  '${estado.t('tabla.id')} ${e.id}\n'
+                  '${estado.t('tabla.capacidad')}: ${estado.i18n.numero(e.capacidadHm3)}\n'
+                  '${estado.t('tabla.nivel')}: ${estado.i18n.numero(e.nivelActualHm3)}',
+                ),
               ),
               isThreeLine: true,
               trailing: _Acciones(embalse: e, onEditar: onEditar, onEliminar: onEliminar),

@@ -11,7 +11,7 @@ import { VistaService } from './vista.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatCardModule, MatButtonModule, MatIconModule],
   template: `
-    <mat-card appearance="outlined" class="tarjeta">
+    <mat-card appearance="outlined" class="tarjeta" data-testid="sesion-no-valida">
       <mat-card-header>
         <mat-icon class="icono">lock_clock</mat-icon>
         <mat-card-title>{{ i18n.t('login.sesionNoValidaTitle') }}</mat-card-title>

@@ -185,6 +185,7 @@ export default function App() {
       >
         <Alert
           id="mensaje-error"
+          data-testid="aviso"
           severity="error"
           variant="filled"
           action={

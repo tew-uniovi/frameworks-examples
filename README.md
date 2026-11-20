@@ -147,17 +147,46 @@ Usuarios de prueba del servicio de autenticación:
 ├── 📁 aquaapp-frontend-angular/   # Angular + Angular Material
 ├── 📁 aquaapp-frontend-react/     # React + Vite + Material UI
 ├── 📁 aquaapp-frontend-flutter/   # Flutter Web + Material 3
+├── 📁 E2E/                        # pruebas de sistema con Playwright (una suite para los tres clientes)
 ├── 📁 .github/
-│   └── 📄 dependabot.yml          # actualizaciones mensuales de dependencias e imágenes de Docker
+│   ├── 📁 workflows/
+│   │   └── 📄 e2e.yml             # ejecuta las pruebas de sistema en cada PR, push a main y a mano
+│   └── 📄 dependabot.yml          # actualizaciones mensuales de dependencias, imágenes de Docker y acciones
 ├── 📄 docker-compose.yml          # despliega los tres clientes en la red aquaapp-network
 └── 📄 .env.example
 ```
 
+## Pruebas de sistema
+
+La carpeta [`E2E/`](E2E/README.md) contiene **una única suite de [Playwright](https://playwright.dev/)** que se
+ejecuta contra los tres clientes y comprueba que se comportan igual: login (correcto y fallido), registro, y listado,
+edición y borrado de embalses. Cada cliente es un proyecto (`angular`, `react`, `flutter`) y se localiza todo con
+identificadores de prueba comunes (`data-testid` en Angular y React; `Semantics(identifier)` en Flutter).
+
+Para ejecutarlas en local hace falta el stack levantado (ver [Puesta en marcha](#puesta-en-marcha)) y Chrome:
+
+```bash
+cd E2E
+npm ci
+npx playwright test                    # los tres clientes
+npx playwright test --project=react    # solo uno
+```
+
+El workflow [`e2e.yml`](.github/workflows/e2e.yml) las lanza en cada PR, también en los de Dependabot: levanta el
+backend y auth desde las imágenes que publica en GHCR el repositorio del backend
+([`docker-compose.backend.yml`](docker-compose.backend.yml)), construye la imagen del cliente, lo arranca y pasa la
+suite (un trabajo por framework). Requiere un paso manual, una sola vez: en los ajustes de cada paquete de GHCR
+(`aquaapp-backend` y `aquaapp-auth`) → *Manage Actions access* → *Add repository* → solo este repositorio, con rol
+*Read*; con eso basta el `GITHUB_TOKEN` del workflow, también en los PRs de Dependabot. Admite además el secreto
+opcional `GHCR_TOKEN` (un PAT con `read:packages`, no recomendado porque da lectura a todos los paquetes del usuario)
+y las variables opcionales `BACKEND_IMAGE` y `AUTH_IMAGE`. Más detalles en [`E2E/README.md`](E2E/README.md).
+
 ## Dependencias
 
-[Dependabot](.github/dependabot.yml) revisa cada mes las dependencias de cada cliente (`npm` y `pub`) y las
-imágenes base de sus Dockerfile. Los PRs se asignan a `augustocristian` y se etiquetan por framework (`angular`,
-`react`, `flutter`) y por lenguaje (`ts`, `js`, `dart`, `docker`). Las subidas menores y de parche se agrupan en un
+[Dependabot](.github/dependabot.yml) revisa cada mes las dependencias de cada cliente (`npm` y `pub`), las
+imágenes base de sus Dockerfile, las de las pruebas de sistema (`E2E/`) y las acciones de GitHub. Los PRs se asignan
+a `augustocristian` y se etiquetan por framework (`angular`, `react`, `flutter`, `e2e`, `github-actions`) y por
+lenguaje (`ts`, `js`, `dart`, `docker`). Las subidas menores y de parche se agrupan en un
 solo PR por carpeta para evitar conflictos entre ellos.
 
 ## ¿Tienes algún problema?

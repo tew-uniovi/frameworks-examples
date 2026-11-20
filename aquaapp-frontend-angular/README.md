@@ -318,31 +318,29 @@ aunque el backend todavía no exista.
 ### Pruebas unitarias
 
 ```bash
-npm test        # ng test: Vitest + jsdom (10 pruebas en 3 ficheros)
+npm test        # ng test: Vitest + jsdom (11 pruebas en 4 ficheros)
 ```
 
 Cubren la lógica sin interfaz: `SesionService` (token, usuario, caducidad, login), `EmbalseService` (filtro,
 paginación de 5, nivel medio, conservar el filtro al recargar) y `authInterceptor` (cabecera `Bearer`, `401` local con
 el token caducado, peticiones ajenas a `/api`).
 
-### Pruebas de interfaz
+### Pruebas de sistema
 
-Esta variante no incluye pruebas de interfaz propias: reutiliza las del cliente original, el proyecto Java/Maven
-`aquaapp-webtest` de `YYyy-tew-ZZ-UOXXXXX` (JUnit + Selenium WebDriver + Cucumber), que se apuntan a esta aplicación con
-la propiedad `baseUrl` (por defecto, `http://localhost/aquaapp/`). Con el stack y este contenedor en marcha:
+Las pruebas de sistema no viven en esta carpeta: están en la carpeta [`E2E/`](../E2E) de la raíz del repositorio, una
+**única suite de Playwright** que se ejecuta igual contra los tres clientes (Angular, React y Flutter). Para ello esta
+variante expone un atributo `data-testid` en los elementos que usan las pruebas (`menu-embalses`, `menu-sesion`,
+`auth-usuario`, `auth-password`, `auth-enviar`, `auth-error`, `listado-tabla`, `fila-embalse-<id>`,
+`editar-embalse-<id>`, `form-nombre`, `form-guardar`, `aviso`, `sesion-no-valida`...), sin dejar de conservar los `id`
+que ya tenía. Con el stack y este contenedor en marcha (`docker compose up -d --build angular`):
 
 ```bash
-cd ../YYyy-tew-ZZ-UOXXXXX/aquaapp-webtest
-mvn verify -Pe2e -DbaseUrl=http://localhost:8081/aquaapp/
+cd E2E
+npm ci
+npx playwright test --project=angular
 ```
 
-Esas pruebas localizan los elementos por `id` (`usuario`, `password`, `btnLogin`, `modalAuth`, `tabla-embalses`,
-`menuEmbalses`, `btnAlta`, `nombre`, `capacidadHm3`, `nivelActualHm3`, `btnGuardar`), que esta variante conserva. Con la base de datos de semilla (menos de 5 embalses) pasan las 5 pruebas
-(`EmbalseAltaSystemTest`, `EmbalsesSystemTest` y los dos escenarios de Cucumber: alta correcta y login con credenciales
-incorrectas). Ojo: el listado pagina de 5 en 5 (como el original), así que si la base de datos tiene más de 5 embalses el
-embalse recién creado cae en la segunda página y `EmbalseAltaSystemTest` no lo encuentra en la tabla.
-
-Además, el flujo completo se comprobó con Playwright: login como `admin`, listado, filtro, alta (incluida la validación
+Además, el flujo completo se comprobó a mano con Playwright: login como `admin`, listado, filtro, alta (incluida la validación
 del nivel), edición, borrado, cambio de idioma (y de `<html lang>`), registro con contraseñas distintas, `403` con `ana`
 (snackbar y su acción «Cerrar»), `401` con un token caducado, orden del tabulador y trampa de foco en el diálogo, cierre
 con «Cancelar» y con Esc, y modo oscuro, sin errores de consola salvo los propios `401`/`403`.

@@ -50,7 +50,7 @@ class BarraAplicacion extends StatelessWidget implements PreferredSizeWidget {
 
   Widget _menuCuenta(BuildContext context, AppEstado estado) {
     return _BotonMenu(
-      identificador: 'menu-cuenta',
+      identificador: 'menu-sesion',
       icono: Icons.account_circle_outlined,
       etiqueta: _etiquetaCuenta(estado),
       onSelected: (accion) => _ejecutar(context, accion),
@@ -113,16 +113,17 @@ class BarraAplicacion extends StatelessWidget implements PreferredSizeWidget {
       : estado.t('nav.cuenta');
 
   List<PopupMenuEntry<_Accion>> _itemsEmbalses(AppEstado estado) => [
-        _item(_Accion.listado, Icons.list, estado.t('nav.listado')),
-        _item(_Accion.nuevo, Icons.add, estado.t('nav.nuevo')),
+        _item(_Accion.listado, Icons.list, estado.t('nav.listado'), 'menu-listado'),
+        _item(_Accion.nuevo, Icons.add, estado.t('nav.nuevo'), 'menu-nuevo'),
       ];
 
   List<PopupMenuEntry<_Accion>> _itemsCuenta(AppEstado estado) => [
         if (!estado.hayToken) ...[
-          _item(_Accion.login, Icons.login, estado.t('login.title')),
-          _item(_Accion.registro, Icons.person_add_outlined, estado.t('login.registrate')),
+          _item(_Accion.login, Icons.login, estado.t('login.title'), 'menu-login'),
+          _item(_Accion.registro, Icons.person_add_outlined,
+              estado.t('login.registrate'), 'menu-registro'),
         ] else
-          _item(_Accion.salir, Icons.logout, estado.t('nav.salir')),
+          _item(_Accion.salir, Icons.logout, estado.t('nav.salir'), 'menu-logout'),
       ];
 
   List<PopupMenuEntry<_Accion>> _itemsIdioma(AppEstado estado) => [
@@ -138,11 +139,15 @@ class BarraAplicacion extends StatelessWidget implements PreferredSizeWidget {
         ),
       ];
 
-  PopupMenuItem<_Accion> _item(_Accion valor, IconData icono, String texto) {
+  PopupMenuItem<_Accion> _item(
+      _Accion valor, IconData icono, String texto, String identificador) {
     return PopupMenuItem<_Accion>(
       value: valor,
-      child: Row(
-        children: [Icon(icono), const SizedBox(width: 12), Text(texto)],
+      child: Semantics(
+        identifier: identificador,
+        child: Row(
+          children: [Icon(icono), const SizedBox(width: 12), Text(texto)],
+        ),
       ),
     );
   }

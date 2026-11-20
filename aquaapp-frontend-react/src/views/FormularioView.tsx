@@ -55,7 +55,7 @@ export function FormularioView({ embalse, onGuardar }: Props) {
           value={nombre}
           onChange={(e) => setNombre(e.target.value)}
           required
-          slotProps={{ inputLabel: { shrink: true } }}
+          slotProps={{ htmlInput: { 'data-testid': 'form-nombre' }, inputLabel: { shrink: true } }}
           sx={{ gridColumn: { md: '1 / -1' } }}
         />
         <TextField
@@ -69,7 +69,7 @@ export function FormularioView({ embalse, onGuardar }: Props) {
             setNivelSupera(false)
           }}
           required
-          slotProps={{ htmlInput: { min: 0, step: 0.1 }, inputLabel: { shrink: true } }}
+          slotProps={{ htmlInput: { min: 0, step: 0.1, 'data-testid': 'form-capacidad' }, inputLabel: { shrink: true } }}
         />
         <TextField
           id="nivelActualHm3"
@@ -84,11 +84,12 @@ export function FormularioView({ embalse, onGuardar }: Props) {
           required
           error={nivelSupera}
           helperText={nivelSupera ? t('form.nivelSuperaCapacidad') : undefined}
-          slotProps={{ htmlInput: { min: 0, step: 0.1 }, inputLabel: { shrink: true } }}
+          slotProps={{ htmlInput: { min: 0, step: 0.1, 'data-testid': 'form-nivel' }, inputLabel: { shrink: true } }}
         />
       </Box>
       <Button
         id="btnGuardar"
+        data-testid="form-guardar"
         type="submit"
         variant="contained"
         loading={enviando}

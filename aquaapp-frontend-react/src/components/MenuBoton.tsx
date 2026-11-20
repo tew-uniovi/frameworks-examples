@@ -10,6 +10,8 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 interface Props {
   /** id del boton que abre el menu (estable: lo usan las pruebas) */
   id: string
+  /** data-testid del boton (contrato de las pruebas de sistema E2E) */
+  testId: string
   icono: ReactNode
   /** Texto del boton (solo se ve en pantallas anchas; en estrechas queda un IconButton con Tooltip). */
   etiqueta: ReactNode
@@ -21,13 +23,14 @@ interface Props {
 }
 
 /** Boton + Menu de MUI (el desplegable de una AppBar). */
-export function MenuBoton({ id, icono, etiqueta, ariaLabel, alinearDerecha = false, children }: Props) {
+export function MenuBoton({ id, testId, icono, etiqueta, ariaLabel, alinearDerecha = false, children }: Props) {
   const ancho = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'))
   const [ancla, setAncla] = useState<HTMLElement | null>(null)
   const abierto = ancla !== null
 
   const propsComunes = {
     id,
+    'data-testid': testId,
     color: 'inherit' as const,
     'aria-label': ariaLabel,
     'aria-haspopup': 'menu' as const,

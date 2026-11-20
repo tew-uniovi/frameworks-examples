@@ -312,10 +312,16 @@ docker run --rm -v "$PWD:/app" -w /app ghcr.io/cirruslabs/flutter:3.44.0 flutter
 docker run --rm -v "$PWD:/app" -w /app ghcr.io/cirruslabs/flutter:3.44.0 flutter test
 ```
 
-Las pruebas de sistema del original (`aquaapp-webtest/`, Selenium) no son directamente aplicables a Flutter Web:
-la interfaz se pinta en un `<canvas>`, no hay DOM por control. La app activa el árbol de accesibilidad
-(`SemanticsBinding.ensureSemantics()`) y marca `data-listo` en `<body>` cuando cada vista está pintada, lo que permite a
-Playwright localizar los controles por rol y etiqueta (así se generan las capturas).
+Las pruebas de sistema viven en `E2E/`, en la raíz del repositorio: una única suite de Playwright que se ejecuta igual
+contra los tres clientes (Angular, React y Flutter). Localiza los controles por identificador de prueba: en Angular y
+React es `data-testid`; en Flutter Web son `Semantics(identifier: '...')`, que Flutter vuelca al DOM de semántica como
+atributo `flt-semantics-identifier` (la suite configura `testIdAttribute: 'flt-semantics-identifier'`). La app activa el
+árbol de accesibilidad (`SemanticsBinding.ensureSemantics()`) y marca `data-listo` en `<body>` cuando cada vista está
+pintada. Con el stack levantado (`docker compose up -d --build`), se lanzan con:
+
+```bash
+cd E2E && npm ci && npx playwright test --project=flutter
+```
 
 ## Integración continua
 

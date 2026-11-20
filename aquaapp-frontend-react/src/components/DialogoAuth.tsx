@@ -34,7 +34,7 @@ export function DialogoAuth({ modo, onCerrar, onCambiarModo, onLoginCorrecto }: 
   const mostrado = modo ?? ultimo
 
   return (
-    <Dialog id="modalAuth" open={modo !== null} onClose={onCerrar} fullWidth maxWidth="xs" aria-labelledby="tituloAuth">
+    <Dialog id="modalAuth" data-testid="auth-dialogo" open={modo !== null} onClose={onCerrar} fullWidth maxWidth="xs" aria-labelledby="tituloAuth">
       {mostrado === 'login' ? (
         <FormLogin onCerrar={onCerrar} onCambiarModo={onCambiarModo} onLoginCorrecto={onLoginCorrecto} />
       ) : (
@@ -70,6 +70,7 @@ function FormLogin({ onCerrar, onCambiarModo, onLoginCorrecto }: Omit<Props, 'mo
         <Stack spacing={2} sx={{ pt: 1 }}>
           <TextField
             id="usuario"
+            slotProps={{ htmlInput: { 'data-testid': 'auth-usuario' } }}
             label={t('login.usuario')}
             value={usuario}
             onChange={(e) => setUsuario(e.target.value)}
@@ -79,6 +80,7 @@ function FormLogin({ onCerrar, onCambiarModo, onLoginCorrecto }: Omit<Props, 'mo
           />
           <TextField
             id="password"
+            slotProps={{ htmlInput: { 'data-testid': 'auth-password' } }}
             type="password"
             label={t('login.password')}
             value={password}
@@ -87,18 +89,19 @@ function FormLogin({ onCerrar, onCambiarModo, onLoginCorrecto }: Omit<Props, 'mo
             autoComplete="current-password"
           />
           {error && (
-            <Alert id="mensaje-error" severity="error">
+            <Alert id="mensaje-error" data-testid="auth-error" severity="error">
               {t(error)}
             </Alert>
           )}
         </Stack>
       </DialogContent>
       <DialogActions>
-        <Button id="btnCancelar" onClick={onCerrar}>
+        <Button id="btnCancelar" data-testid="auth-cancelar" onClick={onCerrar}>
           {t('comun.cancelar')}
         </Button>
         <Button
           id="btnLogin"
+          data-testid="auth-enviar"
           type="submit"
           variant="contained"
           loading={enviando}
@@ -110,7 +113,7 @@ function FormLogin({ onCerrar, onCambiarModo, onLoginCorrecto }: Omit<Props, 'mo
       </DialogActions>
       <Typography variant="body2" color="text.secondary" align="center" sx={{ pb: 2 }}>
         {t('login.noTienesCuenta')}{' '}
-        <Link component="button" type="button" variant="body2" id="btnIrRegistro" onClick={() => onCambiarModo('registro')}>
+        <Link component="button" type="button" variant="body2" id="btnIrRegistro" data-testid="auth-cambiar" onClick={() => onCambiarModo('registro')}>
           {t('login.registrate')}
         </Link>
       </Typography>
@@ -151,6 +154,7 @@ function FormRegistro({ onCerrar, onCambiarModo }: Pick<Props, 'onCerrar' | 'onC
         <Stack spacing={2} sx={{ pt: 1 }}>
           <TextField
             id="usuario"
+            slotProps={{ htmlInput: { 'data-testid': 'auth-usuario' } }}
             label={t('login.usuario')}
             value={usuario}
             onChange={(e) => setUsuario(e.target.value)}
@@ -160,6 +164,7 @@ function FormRegistro({ onCerrar, onCambiarModo }: Pick<Props, 'onCerrar' | 'onC
           />
           <TextField
             id="password"
+            slotProps={{ htmlInput: { 'data-testid': 'auth-password' } }}
             type="password"
             label={t('login.password')}
             value={password}
@@ -172,6 +177,10 @@ function FormRegistro({ onCerrar, onCambiarModo }: Pick<Props, 'onCerrar' | 'onC
           />
           <TextField
             id="password2"
+            slotProps={{
+              htmlInput: { 'data-testid': 'auth-password2' },
+              formHelperText: { 'data-testid': 'auth-error' } as object, // MUI no tipa data-* en este slot
+            }}
             type="password"
             label={t('login.password2')}
             value={password2}
@@ -185,18 +194,19 @@ function FormRegistro({ onCerrar, onCambiarModo }: Pick<Props, 'onCerrar' | 'onC
             helperText={noCoinciden ? t('login.passwordsNoCoinciden') : undefined}
           />
           {error && (
-            <Alert id="mensaje-error" severity="error">
+            <Alert id="mensaje-error" data-testid="auth-error" severity="error">
               {t(error)}
             </Alert>
           )}
         </Stack>
       </DialogContent>
       <DialogActions>
-        <Button id="btnCancelar" onClick={onCerrar}>
+        <Button id="btnCancelar" data-testid="auth-cancelar" onClick={onCerrar}>
           {t('comun.cancelar')}
         </Button>
         <Button
           id="btnRegistro"
+          data-testid="auth-enviar"
           type="submit"
           variant="contained"
           loading={enviando}
@@ -208,7 +218,7 @@ function FormRegistro({ onCerrar, onCambiarModo }: Pick<Props, 'onCerrar' | 'onC
       </DialogActions>
       <Typography variant="body2" color="text.secondary" align="center" sx={{ pb: 2 }}>
         {t('login.yaTienesCuenta')}{' '}
-        <Link component="button" type="button" variant="body2" id="btnIrLogin" onClick={() => onCambiarModo('login')}>
+        <Link component="button" type="button" variant="body2" id="btnIrLogin" data-testid="auth-cambiar" onClick={() => onCambiarModo('login')}>
           {t('login.iniciaSesion')}
         </Link>
       </Typography>

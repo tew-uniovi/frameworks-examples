@@ -4,6 +4,7 @@ import 'package:aquaapp_frontend/app.dart';
 import 'package:aquaapp_frontend/estado/app_estado.dart';
 import 'package:aquaapp_frontend/servicios/almacen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
@@ -74,6 +75,23 @@ Future<void> _abrirFormulario(WidgetTester tester) async {
   await tester.pumpAndSettle();
 }
 
+/// Identificadores de prueba (`Semantics(identifier)`) presentes en el árbol de semántica.
+Map<String, SemanticsNode> _identificadores(WidgetTester tester) {
+  final encontrados = <String, SemanticsNode>{};
+  void visitar(SemanticsNode nodo) {
+    final id = nodo.getSemanticsData().identifier;
+    if (id.isNotEmpty) encontrados[id] = nodo;
+    nodo.visitChildren((hijo) {
+      visitar(hijo);
+      return true;
+    });
+  }
+
+  // ignore: deprecated_member_use
+  visitar(tester.binding.pipelineOwner.semanticsOwner!.rootSemanticsNode!);
+  return encontrados;
+}
+
 void main() {
   setUpAll(() async {
     await initializeDateFormatting('es');
@@ -134,6 +152,7 @@ void main() {
   });
 
   testWidgets('el registro exige que las contraseñas coincidan', (tester) async {
+    final semantica = tester.ensureSemantics();
     final estado = await _crearEstado(tester, _Servidor());
     await _abrirApp(tester, estado);
 
@@ -145,6 +164,9 @@ void main() {
     await tester.tap(find.byKey(const Key('boton-enviar-auth')));
     await tester.pumpAndSettle();
     expect(find.text('Las contraseñas no coinciden'), findsOneWidget);
+    expect(_identificadores(tester)['auth-error']!.label,
+        'Las contraseñas no coinciden');
+    semantica.dispose();
   });
 
   testWidgets('el formulario no deja guardar un nivel mayor que la capacidad',
@@ -223,6 +245,7 @@ void main() {
 
   testWidgets('en móvil: menú de desbordamiento, tarjetas y botón flotante',
       (tester) async {
+    final semantica = tester.ensureSemantics();
     final estado = await _crearEstado(tester, _Servidor(),
         token: crearJwt(usuario: 'admin'), tamano: const Size(390, 844));
     await _abrirApp(tester, estado);
@@ -230,6 +253,11 @@ void main() {
     expect(find.byType(DataTable), findsNothing);
     expect(find.byType(ListTile), findsNWidgets(5));
     expect(find.byKey(const Key('boton-nuevo-embalse')), findsOneWidget);
+    final ids = _identificadores(tester);
+    expect(ids.keys, containsAll(<String>['menu-principal', 'listado-tabla', 'fila-embalse-1',
+      'editar-embalse-1', 'eliminar-embalse-1']));
+    expect(ids['fila-embalse-1']!.label, contains('Embalse 1'));
+    semantica.dispose();
 
     await tester.tap(find.byTooltip('Más opciones'));
     await tester.pumpAndSettle();
@@ -248,5 +276,35 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(AlertDialog), findsNothing);
     expect(estado.hayToken, isFalse);
+  });
+
+  testWidgets('expone los identificadores de prueba del contrato E2E', (tester) async {
+    final semantica = tester.ensureSemantics();
+    final estado = await _crearEstado(tester, _Servidor(),
+        token: crearJwt(usuario: 'admin'));
+    await _abrirApp(tester, estado);
+
+    var ids = _identificadores(tester);
+    expect(ids.keys, containsAll(<String>[
+      'menu-embalses', 'menu-sesion', 'listado-filtro', 'listado-tabla',
+      'fila-embalse-1', 'fila-embalse-5', 'editar-embalse-1', 'eliminar-embalse-1',
+    ]));
+    expect(ids['menu-sesion']!.label, contains('admin'));
+    expect(ids['fila-embalse-1']!.label, contains('Embalse 1'));
+    expect(ids.keys, isNot(contains('auth-dialogo')));
+
+    // Tras filtrar, las filas que siguen visibles conservan su identificador.
+    await tester.enterText(find.byType(TextField), 'embalse 2');
+    await tester.pumpAndSettle();
+    ids = _identificadores(tester);
+    expect(ids.keys, containsAll(<String>['fila-embalse-2', 'editar-embalse-2']));
+    expect(ids.keys, isNot(contains('fila-embalse-1')));
+
+    await tester.tap(find.byKey(const Key('boton-nuevo-embalse')));
+    await tester.pumpAndSettle();
+    expect(_identificadores(tester).keys, containsAll(<String>[
+      'form-nombre', 'form-capacidad', 'form-nivel', 'form-guardar',
+    ]));
+    semantica.dispose();
   });
 }

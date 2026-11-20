@@ -11,7 +11,10 @@ class VistaSesionNoValida extends StatelessWidget {
   Widget build(BuildContext context) {
     final estado = AppScope.of(context);
     final tema = Theme.of(context);
-    return Center(
+    return Semantics(
+      identifier: 'sesion-no-valida',
+      container: true,
+      child: Center(
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 420),
         child: Card(
@@ -48,6 +51,6 @@ class VistaSesionNoValida extends StatelessWidget {
           ),
         ),
       ),
-    );
+    ));
   }
 }

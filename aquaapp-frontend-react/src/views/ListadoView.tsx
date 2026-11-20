@@ -69,7 +69,7 @@ export function ListadoView({
         onChange={(e) => onFiltrar(e.target.value)}
         sx={{ mb: 2, bgcolor: 'background.paper' }}
         slotProps={{
-          htmlInput: { 'aria-label': t('listado.filtroPlaceholder') },
+          htmlInput: { 'aria-label': t('listado.filtroPlaceholder'), 'data-testid': 'listado-filtro' },
           input: {
             startAdornment: (
               <InputAdornment position="start">
@@ -82,7 +82,7 @@ export function ListadoView({
 
       <Paper variant="outlined">
         {cargando && <LinearProgress />}
-        <TableContainer>
+        <TableContainer data-testid="listado-tabla">
         <Table size="small">
           <TableHead>
             <TableRow sx={{ bgcolor: 'action.hover' }}>
@@ -95,14 +95,18 @@ export function ListadoView({
           </TableHead>
           <TableBody id="tabla-embalses">
             {visibles.map((e) => (
-              <TableRow key={e.id} hover>
+              <TableRow key={e.id} hover data-testid={`fila-embalse-${e.id}`}>
                 <TableCell sx={ocultoEnMovil}>{e.id}</TableCell>
                 <TableCell>{e.nombre}</TableCell>
                 <TableCell>{formatoNumero(e.capacidadHm3)}</TableCell>
                 <TableCell>{formatoNumero(e.nivelActualHm3)}</TableCell>
                 <TableCell sx={{ whiteSpace: 'nowrap' }}>
                   <Tooltip title={t('tabla.editar')}>
-                    <IconButton size="small" aria-label={t('tabla.editar')} onClick={() => onEditar(e)}>
+                    <IconButton
+                      size="small"
+                      data-testid={`editar-embalse-${e.id}`}
+                      aria-label={t('tabla.editar')}
+                      onClick={() => onEditar(e)}>
                       <EditIcon fontSize="small" />
                     </IconButton>
                   </Tooltip>
@@ -110,6 +114,7 @@ export function ListadoView({
                     <IconButton
                       size="small"
                       color="error"
+                      data-testid={`eliminar-embalse-${e.id}`}
                       aria-label={t('tabla.eliminar')}
                       onClick={() => onEliminar(e)}
                     >
