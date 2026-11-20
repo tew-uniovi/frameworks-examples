@@ -22,7 +22,7 @@ class VistaSesionNoValida extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Icon(Icons.lock_clock, size: 40, color: tema.colorScheme.error),
+                Icon(Icons.lock_clock, size: 48, color: tema.colorScheme.error),
                 const SizedBox(height: 12),
                 Text(
                   estado.t('login.sesionNoValidaTitle'),

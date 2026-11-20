@@ -3,6 +3,7 @@ import 'package:flutter/semantics.dart';
 
 import '../app.dart';
 import '../estado/app_estado.dart';
+import '../widgets/adaptativo.dart';
 import '../widgets/barra_aplicacion.dart';
 import '../widgets/panel_indicadores.dart';
 import '../widgets/pie_pagina.dart';
@@ -34,13 +35,24 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
   @override
   Widget build(BuildContext context) {
     final estado = AppScope.of(context);
+    final conBoton = estado.hayToken && estado.vista == Vista.listado;
     return Scaffold(
       appBar: const BarraAplicacion(),
+      // Botón de acción flotante de Material: crear un embalse desde el listado.
+      floatingActionButton: conBoton
+          ? FloatingActionButton.extended(
+              key: const Key('boton-nuevo-embalse'),
+              onPressed: () => estado.mostrarFormulario(),
+              icon: const Icon(Icons.add),
+              label: Text(estado.t('nav.nuevo')),
+            )
+          : null,
       body: Column(
         children: [
           Expanded(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
+              // Con el botón flotante, margen extra abajo para no tapar la última fila.
+              padding: EdgeInsets.fromLTRB(16, 16, 16, conBoton ? 96 : 16),
               child: Center(
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 1200),
@@ -77,7 +89,7 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
       child: const PanelIndicadores(),
     );
     // Ancho: panel a la derecha. Estrecho: debajo del listado.
-    if (MediaQuery.sizeOf(context).width >= 900) {
+    if (Pantalla.esExpandida(context)) {
       return Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

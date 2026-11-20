@@ -103,7 +103,6 @@ class _VistaFormularioState extends State<VistaFormulario> {
                   labelText: t('form.nombre'),
                   hintText: t('form.nombrePlaceholder'),
                   prefixIcon: const Icon(Icons.water_drop_outlined),
-                  border: const OutlineInputBorder(),
                 ),
                 validator: (v) => (v == null || v.trim().isEmpty)
                     ? t('validacion.obligatorio')
@@ -119,7 +118,6 @@ class _VistaFormularioState extends State<VistaFormulario> {
                   labelText: t('form.capacidad'),
                   hintText: t('form.capacidadPlaceholder'),
                   prefixIcon: const Icon(Icons.storage_outlined),
-                  border: const OutlineInputBorder(),
                 ),
                 validator: numeroValido,
               )),
@@ -134,7 +132,6 @@ class _VistaFormularioState extends State<VistaFormulario> {
                   labelText: t('form.nivel'),
                   hintText: t('form.nivelPlaceholder'),
                   prefixIcon: const Icon(Icons.show_chart),
-                  border: const OutlineInputBorder(),
                 ),
                 validator: (v) {
                   final basico = numeroValido(v);
@@ -155,7 +152,10 @@ class _VistaFormularioState extends State<VistaFormulario> {
             icon: estado.guardando
                 ? const SizedBox.square(
                     dimension: 18,
-                    child: CircularProgressIndicator(strokeWidth: 2),
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      semanticsLabel: t('comun.guardando'),
+                    ),
                   )
                 : const Icon(Icons.save_outlined),
             label: Text(t('form.guardar')),

@@ -69,9 +69,7 @@ Future<void> _abrirApp(WidgetTester tester, AppEstado estado) async {
 }
 
 Future<void> _abrirFormulario(WidgetTester tester) async {
-  await tester.tap(find.text('Embalses'));
-  await tester.pumpAndSettle();
-  await tester.tap(find.text('Nuevo embalse'));
+  await tester.tap(find.byKey(const Key('boton-nuevo-embalse')));
   await tester.pumpAndSettle();
 }
 
@@ -95,7 +93,7 @@ void main() {
     // Se envió el JWT en la petición protegida.
     expect(servidor.cabecerasAuth.last, startsWith('Bearer '));
 
-    await tester.tap(find.text('Siguiente'));
+    await tester.tap(find.byTooltip('Siguiente'));
     await tester.pumpAndSettle();
     expect(find.text('Página 2 de 3'), findsOneWidget);
     expect(find.text('Embalse 6'), findsOneWidget);
@@ -214,7 +212,7 @@ void main() {
 
     await tester.tap(find.text('ES'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('EN · English'));
+    await tester.tap(find.text('English'));
     await tester.pumpAndSettle();
 
     expect(find.text('Hi, admin'), findsOneWidget);

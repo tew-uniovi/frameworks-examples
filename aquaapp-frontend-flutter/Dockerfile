@@ -1,4 +1,5 @@
-# build: compila Flutter Web (CanvasKit) con la ruta base /aquaapp/
+# build: compila Flutter Web (CanvasKit) con la ruta base /aquaapp/.
+# --no-web-resources-cdn: CanvasKit se sirve desde la propia app, no desde gstatic.com.
 FROM ghcr.io/cirruslabs/flutter:3.44.0 AS build
 WORKDIR /app
 COPY pubspec.yaml pubspec.lock ./
@@ -7,7 +8,7 @@ COPY analysis_options.yaml ./
 COPY assets ./assets
 COPY web ./web
 COPY lib ./lib
-RUN flutter build web --release --base-href /aquaapp/
+RUN flutter build web --release --base-href /aquaapp/ --no-web-resources-cdn
 
 # runtime: nginx sirve los estáticos y hace de proxy de /api y /auth
 FROM nginx:alpine
