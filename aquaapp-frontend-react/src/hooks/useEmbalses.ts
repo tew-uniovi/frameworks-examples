@@ -7,9 +7,9 @@ import type { Embalse } from '../api/tipos'
  * propagan a quien llama, que decide como mostrarlos (401 -> sesion no valida,
  * 403 -> aviso de permisos...).
  */
-export function useEmbalses() {
+export function useEmbalses(cargandoInicial = false) {
   const [embalses, setEmbalses] = useState<Embalse[]>([])
-  const [cargando, setCargando] = useState(false)
+  const [cargando, setCargando] = useState(cargandoInicial)
   const [ultimaActualizacion, setUltimaActualizacion] = useState<Date | null>(null)
 
   const recargar = useCallback(async () => {

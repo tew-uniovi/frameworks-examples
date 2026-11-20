@@ -6,6 +6,10 @@ server {
     listen 80;
     server_name _;
 
+    # Redirecciones relativas (Location: /aquaapp/): con el puerto publicado distinto
+    # del 80 de dentro del contenedor, una URL absoluta saldría sin el puerto correcto.
+    absolute_redirect off;
+
     # DNS interno de Docker. Con `set $var` + proxy_pass $var, nginx resuelve el
     # nombre en cada petición (no al arrancar): si backend o auth aún no existen,
     # nginx arranca igualmente y solo falla la petición correspondiente.

@@ -1,0 +1,42 @@
+# Plantilla de nginx: el entrypoint de nginx:alpine ejecuta envsubst sobre ella
+# (solo sustituye las variables de entorno definidas, p. ej. BACKEND_URL y
+# AUTH_URL; $host, $uri... son variables de nginx y se quedan como estan).
+server {
+    listen 80;
+    server_name _;
+
+    # Resolucion DNS en tiempo de ejecucion (DNS interno de Docker): nginx
+    # arranca aunque backend/auth todavia no existan.
+    resolver 127.0.0.11 valid=10s;
+    set $backend ${BACKEND_URL};
+    set $auth ${AUTH_URL};
+
+    location = / {
+        return 302 /aquaapp/;
+    }
+
+    # API REST del backend (se conserva la ruta completa: /api/embalses...)
+    location /api/ {
+        proxy_pass $backend;
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    # Servicio de autenticacion: /auth/login -> http://auth:9000/login
+    location /auth/ {
+        rewrite ^/auth/(.*)$ /$1 break;
+        proxy_pass $auth;
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    # SPA bajo /aquaapp/: cualquier ruta desconocida cae en index.html
+    location /aquaapp/ {
+        root /usr/share/nginx/html;
+        try_files $uri $uri/ /aquaapp/index.html;
+    }
+}

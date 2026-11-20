@@ -13,6 +13,7 @@ export default defineConfig(({ mode }) => {
   return {
     base: '/aquaapp/',
     plugins: [react()],
+    build: { chunkSizeWarningLimit: 800 }, // MUI + Emotion pesan mas de 500 kB
     server: {
       proxy: {
         '/api': { target: backend, changeOrigin: true },
