@@ -1,10 +1,10 @@
 # Variantes del cliente de aquaapp con distintos frameworks.
 #
 # Este compose NO levanta auth ni backend: se conecta a la red "aquaapp-network"
-# (declarada "external"), que crea el compose de tew-profes-lab-spring y donde
+# (declarada "external"), que crea el compose de YYyy-tew-ZZ-UOXXXXX y donde
 # ya viven los servicios `auth` y `backend`. Hay que arrancar ESE stack primero:
 #
-#   cd ../tew-profes-lab-spring && docker compose up -d --build
+#   cd ../YYyy-tew-ZZ-UOXXXXX && docker compose up -d --build
 #   cd ../frameworks-examples   && docker compose up -d --build
 #
 # Si la red tuviera otro nombre, exporta AQUAAPP_NETWORK o ponlo en un fichero

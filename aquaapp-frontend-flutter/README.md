@@ -59,7 +59,7 @@
 
 **aquaapp (Flutter)** es una variante del cliente web de aquaapp —la gestión de embalses del Principado de Asturias—
 construida con **Flutter Web**, **Material 3** y los iconos de Flutter (`Icons.*`). Tiene la misma funcionalidad que el
-[cliente original](https://github.com/tew-uniovi/tew-profes-lab-spring) (TypeScript + Bootstrap), pero con la
+cliente original (`aquaapp-cliente`) (TypeScript + Bootstrap), pero con la
 interfaz y las convenciones nativas de Flutter, y consume la API REST del backend Spring Boot y el servicio de
 autenticación en Rust de ese mismo proyecto.
 
@@ -216,7 +216,7 @@ al cancelar el diálogo sin sesión. El resto son vistas del cuerpo de la págin
 La aplicación se compila a estáticos con `flutter build web --base-href /aquaapp/`; los sirve un nginx que además hace
 de proxy inverso de `/api/` hacia el backend y de `/auth/` hacia el servicio de autenticación (quitando el prefijo), de
 modo que el navegador solo habla con su propio origen y no hay CORS. Todos los contenedores comparten la red Docker
-`aquaapp-network`, que crea el compose del proyecto `tew-profes-lab-spring`.
+`aquaapp-network`, que crea el compose del proyecto `YYyy-tew-ZZ-UOXXXXX`.
 
 ```mermaid
 flowchart LR
@@ -230,7 +230,7 @@ flowchart LR
         PAUTH["/auth/* → auth (sin prefijo)"]
     end
 
-    subgraph NET["Red Docker aquaapp-network (tew-profes-lab-spring)"]
+    subgraph NET["Red Docker aquaapp-network (YYyy-tew-ZZ-UOXXXXX)"]
         BACK["backend<br/>Spring Boot · 8080"]
         AUTH["auth<br/>Rust · 9000"]
     end
@@ -246,7 +246,7 @@ flowchart LR
 ## Requisitos previos
 
 > Estos requisitos complementan a los del backend: el cliente necesita `auth` y `backend` de
-> [tew-profes-lab-spring](https://github.com/tew-uniovi/tew-profes-lab-spring) en marcha (ver su README).
+> `YYyy-tew-ZZ-UOXXXXX` en marcha (ver su README).
 
 | Herramienta | Versión | Necesaria para |
 |---|---|---|
@@ -267,7 +267,7 @@ variables propias de nginx (`$host`, `$uri`...) se conservan. Los nombres se res
 
 ## Instalación y puesta en marcha
 
-Primero hay que arrancar el backend siguiendo el README de `tew-profes-lab-spring` (su compose crea la red
+Primero hay que arrancar el backend siguiendo el README de `YYyy-tew-ZZ-UOXXXXX` (su compose crea la red
 `aquaapp-network` con los servicios `auth` y `backend`).
 
 ### Con Docker (recomendado)

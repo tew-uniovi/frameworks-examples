@@ -62,10 +62,10 @@
 
 **aquaapp (variante Angular)** es una reimplementación del cliente web de aquaapp, la aplicación para consultar y
 gestionar los embalses de una cuenca. El original es una SPA en HTML5, CSS3 y TypeScript puro con Bootstrap
-(`aquaapp-cliente`, en el repositorio `tew-profes-lab-spring`); esta variante ofrece **la misma funcionalidad** con
+(`aquaapp-cliente`, en el repositorio `YYyy-tew-ZZ-UOXXXXX`); esta variante ofrece **la misma funcionalidad** con
 **Angular 22** (componentes *standalone*, *signals* y detección de cambios *zoneless*) y **Angular Material**
 (Material Design 3) en lugar de Bootstrap. Consume la API REST del backend Spring Boot y el servicio de
-autenticación en Rust de [`tew-profes-lab-spring`](https://github.com/tew-uniovi/tew-profes-lab-spring).
+autenticación en Rust de `YYyy-tew-ZZ-UOXXXXX`.
 
 - **Login y registro** en un único diálogo modal (`MatDialog`, con las acciones «Cancelar» y la principal alineadas a la derecha), con la sesión (JWT) guardada en `sessionStorage`.
 - **CRUD de embalses**: listado, alta, edición y borrado contra `/api/embalses`, con el JWT en `Authorization: Bearer`.
@@ -241,7 +241,7 @@ flowchart LR
         PROXYAUTH["/auth/ → proxy (quita el prefijo)"]
     end
 
-    subgraph NET["Red Docker «aquaapp-network» (tew-profes-lab-spring)"]
+    subgraph NET["Red Docker «aquaapp-network» (YYyy-tew-ZZ-UOXXXXX)"]
         BACKEND["backend<br/>Spring Boot · 8080"]
         AUTH["auth<br/>Rust · 9000"]
     end
@@ -260,7 +260,7 @@ flowchart LR
 |---|---|---|
 | Node.js | 22.22+, 24.15+ o 26+ (probado con 24) | Compilar y ejecutar la aplicación en desarrollo (`npm start`, `ng build`, `ng test`) |
 | Docker | 24+ | Construir la imagen y desplegar con nginx |
-| Backend de aquaapp | — | Backend Spring Boot (`backend`) y servicio de autenticación (`auth`) de [`tew-profes-lab-spring`](https://github.com/tew-uniovi/tew-profes-lab-spring) arrancados con Docker en la red `aquaapp-network` |
+| Backend de aquaapp | — | Backend Spring Boot (`backend`) y servicio de autenticación (`auth`) de `YYyy-tew-ZZ-UOXXXXX` arrancados con Docker en la red `aquaapp-network` |
 
 ### Variables de entorno
 
@@ -276,7 +276,7 @@ El `docker-compose.yml` de la raíz del repositorio las pasa a cada variante y p
 
 ## Instalación y puesta en marcha
 
-Arranca primero el stack de [`tew-profes-lab-spring`](https://github.com/tew-uniovi/tew-profes-lab-spring) (servicios
+Arranca primero el stack de `YYyy-tew-ZZ-UOXXXXX` (servicios
 `auth` y `backend`) con Docker: crea la red compartida `aquaapp-network`. Usuarios semilla: `ana` / `1234` (rol
 `USER`, solo lectura) y `admin` / `admin` (rol `ADMIN`, puede escribir).
 
@@ -328,11 +328,11 @@ el token caducado, peticiones ajenas a `/api`).
 ### Pruebas de interfaz
 
 Esta variante no incluye pruebas de interfaz propias: reutiliza las del cliente original, el proyecto Java/Maven
-`aquaapp-webtest` de `tew-profes-lab-spring` (JUnit + Selenium WebDriver + Cucumber), que se apuntan a esta aplicación con
+`aquaapp-webtest` de `YYyy-tew-ZZ-UOXXXXX` (JUnit + Selenium WebDriver + Cucumber), que se apuntan a esta aplicación con
 la propiedad `baseUrl` (por defecto, `http://localhost/aquaapp/`). Con el stack y este contenedor en marcha:
 
 ```bash
-cd ../tew-profes-lab-spring/aquaapp-webtest
+cd ../YYyy-tew-ZZ-UOXXXXX/aquaapp-webtest
 mvn verify -Pe2e -DbaseUrl=http://localhost:8081/aquaapp/
 ```
 

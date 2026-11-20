@@ -63,8 +63,8 @@
 **aquaapp (React)** es una de las variantes del cliente web de aquaapp, la aplicación de gestión de recursos
 hídricos del Principado de Asturias de la práctica de Tecnologías Web. Es una SPA construida con **React 19,
 TypeScript y Vite**, con la interfaz en **Material UI (MUI)**, que reproduce la funcionalidad del cliente original
-(HTML + TypeScript sin framework, en `aquaapp-cliente` de `tew-profes-lab-spring`) y consume la misma API REST: el
-backend Spring Boot (embalses) y el servicio de autenticación en Rust, ambos del repositorio `tew-profes-lab-spring`.
+(HTML + TypeScript sin framework, en `aquaapp-cliente` de `YYyy-tew-ZZ-UOXXXXX`) y consume la misma API REST: el
+backend Spring Boot (embalses) y el servicio de autenticación en Rust, ambos del repositorio `YYyy-tew-ZZ-UOXXXXX`.
 
 - **Login y registro** en un único diálogo modal; el JWT se guarda en `sessionStorage` (clave `jwt`), el usuario se
   lee del claim `sub` y la caducidad del claim `exp`.
@@ -218,7 +218,7 @@ se pintan en `<main>` (el panel de indicadores solo aparece con el listado). Las
 
 La SPA se compila a ficheros estáticos y los sirve Nginx, que además actúa de proxy inverso: `/api/*` va al
 backend Spring Boot y `/auth/*` al servicio de autenticación (quitando el prefijo `/auth`). Así el navegador solo
-habla con un origen y no hay problemas de CORS. Nginx se une a la red de Docker del stack de `tew-profes-lab-spring`
+habla con un origen y no hay problemas de CORS. Nginx se une a la red de Docker del stack de `YYyy-tew-ZZ-UOXXXXX`
 (`aquaapp-network`) para resolver los servicios `backend` y `auth` por nombre.
 
 ```mermaid
@@ -233,7 +233,7 @@ flowchart LR
         PROXYAUTH["/auth/ → proxy<br/>(/auth/login → /login)"]
     end
 
-    subgraph RED["Red Docker compartida: aquaapp-network (tew-profes-lab-spring)"]
+    subgraph RED["Red Docker compartida: aquaapp-network (YYyy-tew-ZZ-UOXXXXX)"]
         BACKEND["backend (Spring Boot)<br/>:8080"]
         AUTH["auth (Rust)<br/>:9000"]
     end
@@ -252,7 +252,7 @@ flowchart LR
 |---|---|---|
 | Node.js | 24 (la versión con la que se ha probado) | `npm run dev`, build, lint y pruebas |
 | Docker | 24+ | Construir y ejecutar la imagen (Nginx) |
-| Stack de `tew-profes-lab-spring` | — | La SPA necesita `auth` y `backend` arrancados (`docker compose up -d --build` en ese repositorio), que crea la red `aquaapp-network` |
+| Stack de `YYyy-tew-ZZ-UOXXXXX` | — | La SPA necesita `auth` y `backend` arrancados (`docker compose up -d --build` en ese repositorio), que crea la red `aquaapp-network` |
 
 ### Variables de entorno
 
@@ -267,7 +267,7 @@ arrancar (`envsubst`). En desarrollo, el proxy de Vite las lee del entorno o de 
 
 ## Instalación y puesta en marcha
 
-Arranca primero el stack de `tew-profes-lab-spring` (servicios `auth` y `backend`), que crea la red
+Arranca primero el stack de `YYyy-tew-ZZ-UOXXXXX` (servicios `auth` y `backend`), que crea la red
 `aquaapp-network`; después, la SPA con una de estas dos opciones.
 
 **Desarrollo** (Vite con recarga en caliente y proxy hacia `localhost`):

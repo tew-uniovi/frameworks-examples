@@ -1,10 +1,8 @@
 <p align="center">
-  <img src="aquaapp-frontend-react/img/aquaapp-logo-horizontal.svg" alt="Logo de aquaapp" width="320" style="vertical-align: middle;"/>
-  &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="aquaapp-frontend-react/img/logo-epigijon.png" alt="Logo de la Escuela Politécnica de Ingeniería de Gijón (Universidad de Oviedo)" width="160" style="vertical-align: middle;"/>
+  <img src="aquaapp-frontend-react/img/logo-epigijon.png" alt="Logo de la Escuela Politécnica de Ingeniería de Gijón (Universidad de Oviedo)" width="240"/>
 </p>
 
-# aquaapp con distintos frameworks — Tecnologías Web
+# Aquaapp con distintos frameworks — Tecnologías Web
 
 Un mismo cliente web, **tres implementaciones**. Este repositorio contiene el cliente de *aquaapp* (gestión de
 embalses) reescrito en **Angular**, **React** y **Flutter**, con las mismas funcionalidades y la misma API: login y
@@ -12,9 +10,11 @@ registro con JWT, CRUD de embalses con filtro y paginación, panel de indicadore
 tratamiento de errores `401` y `403`. Cada variante usa los componentes e iconos propios de su ecosistema, para que
 parezca una aplicación nativa de ese framework.
 
-Las tres consumen el backend de [`tew-profes-lab-spring`](https://github.com/tew-uniovi/tew-profes-lab-spring)
-(servicio de autenticación en Rust y API REST en Spring Boot), al que se conectan a través de una red de Docker
-compartida.
+Las tres consumen el backend de la práctica (servicio de autenticación en Rust y API REST en Spring Boot), que vive
+en tu repositorio `YYyy-tew-ZZ-UOXXXXX`, y se conectan a él a través de una red de Docker compartida.
+
+> `YYyy-tew-ZZ-UOXXXXX` es la plantilla del nombre del repositorio del backend: `YYyy` son el año del curso y el
+> siguiente, `ZZ` el número de PL (`01`, `02`, `03`...) y `UOXXXXX` tu UO. Por ejemplo, `2627-tew-01-UO123456`.
 
 Estos son los clientes disponibles:
 
@@ -44,12 +44,61 @@ Estos son los clientes disponibles:
 
 ---
 
+## ¿Por qué estos tres frameworks?
+
+La elección se apoya en el análisis de popularidad de
+[Thomas Krotoff, «React vs others»](https://gist.github.com/tkrotoff/b1caa4c3a185629299ec234d2314e190), que recopila
+desde 2018 encuestas (Stack Overflow, State of JS, JetBrains), descargas de npm y otras fuentes. Conviene leerlo con
+cautela: es un recopilatorio de un autor independiente, con gráficas de fuentes distintas, y mide **popularidad y
+ecosistema**, no calidad técnica.
+
+### React y Angular: los dos frameworks web más usados
+
+| Framework | Uso (State of JS 2025) | Popularidad (Stack Overflow 2025) | Satisfacción (State of JS 2025) |
+|---|---|---|---|
+| **React** | 85 % | 44,7 % | 72 % |
+| **Angular** | 48 % | 18,2 % | 48 % |
+| Vue | 52 % | 17,6 % | 84 % |
+| Svelte | 27 % | 7,2 % | 86 % |
+
+- **React** es, con diferencia, el más usado en todas las encuestas del artículo. Su conclusión es que sigue creciendo
+  más rápido que las alternativas y que estas, aunque quizá técnicamente mejores, no lo son lo bastante como para
+  compensar el coste de migrar y reaprender; además, un framework de interfaz tiene un fuerte **efecto red**: al
+  usar el más popular se hereda todo su ecosistema de herramientas y librerías (aquí, por ejemplo, Material UI).
+- **Angular** es la otra gran referencia: queda por delante de Vue y de Svelte en popularidad en Stack Overflow
+  (18,2 %) y, según JetBrains 2023, lo usa un 20 % de los desarrolladores. Aporta un contrapunto útil a React: es un
+  framework completo y con criterio propio (inyección de dependencias, formularios, cliente HTTP y *signals* de serie),
+  frente a una biblioteca que se completa con el ecosistema.
+- **Vue y Svelte** quedan fuera. El artículo los valora mejor (satisfacción del 84 % y el 86 %), pero su uso es
+  bastante menor (52 % y 27 %), así que aportan menos para comparar enfoques ampliamente utilizados.
+
+La contrapartida de Angular también aparece en los datos: su satisfacción (48 % en State of JS 2025, 44,7 % «admirado»
+en Stack Overflow) es la más baja de las cuatro. Se ha mantenido porque interesa comparar un framework muy extendido
+y estructurado con una biblioteca ligera, no porque sea el más querido.
+
+### Flutter: un enfoque distinto a la web con JavaScript
+
+El artículo anterior solo trata frameworks web de JavaScript, así que **no justifica por sí solo Flutter**. Su autor
+enlaza un segundo análisis, [«React Native vs Flutter»](https://gist.github.com/tkrotoff/93f5278a4e8df7e5f6928eff98684979),
+donde Flutter aparece como la herramienta multiplataforma más usada y mejor valorada frente a React Native:
+
+| | Flutter | React Native |
+|---|---|---|
+| Popularidad (Stack Overflow 2024) | 9,4 % | 8,4 % |
+| «Admirado» (Stack Overflow 2024) | 60,6 % | 56,5 % |
+| Uso (JetBrains 2023, desarrollo móvil) | 46 % | 35 % |
+| Repositorios en GitHub (agosto de 2026) | 79 510 | 61 393 |
+
+Se incluye Flutter por lo que **contrasta** con las otras dos variantes: usa Dart, dibuja la interfaz con su propio
+motor en un `<canvas>` en lugar de con elementos HTML, y permite reutilizar la misma base de código en web y en móvil.
+Es la variante que más se aleja del cliente original y la que más enseña sobre los límites de cada enfoque.
+
 ## Arquitectura
 
 Cada cliente es una imagen de **nginx** que sirve la aplicación compilada bajo `/aquaapp/` y reenvía `/api/*` al
 backend y `/auth/*` al servicio de autenticación, de modo que el navegador siempre habla con un único origen (sin
 CORS). Todos los contenedores comparten la red `aquaapp-network`, que crea el `docker-compose.yml` de
-`tew-profes-lab-spring`.
+`YYyy-tew-ZZ-UOXXXXX`.
 
 ```mermaid
 flowchart LR
@@ -61,7 +110,7 @@ flowchart LR
         FLU["flutter<br/>:8083"]
     end
 
-    subgraph SPR["tew-profes-lab-spring · red aquaapp-network"]
+    subgraph SPR["YYyy-tew-ZZ-UOXXXXX · red aquaapp-network"]
         BACK["backend<br/>Spring Boot :8080"]
         AUTH["auth<br/>Rust :9000"]
     end
@@ -77,8 +126,8 @@ Hace falta [Docker](https://docs.docker.com/get-docker/) con Compose. Primero se
 compartida, y después los tres clientes:
 
 ```bash
-# 1. Backend y autenticación (repositorio tew-profes-lab-spring): crea la red aquaapp-network
-cd ../tew-profes-lab-spring
+# 1. Backend y autenticación (repositorio YYyy-tew-ZZ-UOXXXXX): crea la red aquaapp-network
+cd ../YYyy-tew-ZZ-UOXXXXX
 docker compose up -d --build
 
 # 2. Los tres clientes de este repositorio, cada uno en su puerto
