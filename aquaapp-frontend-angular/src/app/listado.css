@@ -1,0 +1,41 @@
+.actualizado {
+  margin: 0 0 12px;
+  color: var(--mat-sys-on-surface-variant);
+  font: var(--mat-sys-body-medium);
+}
+
+.filtro {
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.tabla-contenedor {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+}
+
+.acciones {
+  white-space: nowrap;
+  width: 1%;
+}
+
+.sin-datos td {
+  padding: 16px;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.cargando {
+  display: flex;
+  justify-content: center;
+  padding: 32px;
+}
+
+@media (max-width: 599px) {
+  th.mat-mdc-header-cell,
+  td.mat-mdc-cell {
+    padding: 0 8px;
+  }
+}

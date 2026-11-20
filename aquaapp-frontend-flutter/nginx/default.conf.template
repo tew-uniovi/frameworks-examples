@@ -1,0 +1,44 @@
+# Plantilla de nginx. El entrypoint de nginx:alpine ejecuta envsubst sobre
+# /etc/nginx/templates/*.template y deja el resultado en /etc/nginx/conf.d/.
+# Solo se sustituyen BACKEND_URL y AUTH_URL (ver NGINX_ENVSUBST_FILTER en el
+# Dockerfile): variables de nginx como $uri, $host o $backend se conservan.
+server {
+    listen 80;
+    server_name _;
+
+    # DNS interno de Docker. Con `set $var` + proxy_pass $var, nginx resuelve el
+    # nombre en cada petición (no al arrancar): si backend o auth aún no existen,
+    # nginx arranca igualmente y solo falla la petición correspondiente.
+    resolver 127.0.0.11 valid=10s;
+    set $backend ${BACKEND_URL};
+    set $auth ${AUTH_URL};
+
+    location = / {
+        return 302 /aquaapp/;
+    }
+
+    # API de negocio: /api/* -> backend. Sin URI en proxy_pass, la ruta original se conserva.
+    location /api/ {
+        proxy_pass $backend;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    # Autenticación: /auth/login -> auth:9000/login (se quita el prefijo /auth).
+    location /auth/ {
+        rewrite ^/auth/(.*)$ /$1 break;
+        proxy_pass $auth;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    # Cliente Flutter Web (build/web copiado a /usr/share/nginx/html/aquaapp/).
+    location /aquaapp/ {
+        root /usr/share/nginx/html;
+        try_files $uri $uri/ /aquaapp/index.html;
+    }
+}

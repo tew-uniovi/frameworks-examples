@@ -27,15 +27,12 @@ const String claveIdioma = 'idioma';
 class AppEstado extends ChangeNotifier {
   AppEstado({
     required http.Client cliente,
-    required Almacen almacenSesion,
-    required Almacen almacenLocal,
+    required this._almacenSesion,
+    required this._almacenLocal,
     required Traducciones traducciones,
-    IndicadorListo indicador = const IndicadorNulo(),
+    this._indicador = const IndicadorNulo(),
     Uri? base,
-  })  : _almacenSesion = almacenSesion,
-        _almacenLocal = almacenLocal,
-        _indicador = indicador,
-        i18n = traducciones {
+  }) : i18n = traducciones {
     _auth = AuthApi(cliente, base: base);
     _api = EmbalsesApi(cliente, () => token, base: base);
   }
