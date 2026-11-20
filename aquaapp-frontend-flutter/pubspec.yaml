@@ -14,7 +14,7 @@ dependencies:
   flutter_svg: ^2.5.0
   http: ^1.6.0
   intl: ^0.20.3
-  web: ^1.1.1
+  web: ^1.1.2
 
 dev_dependencies:
   flutter_test:
