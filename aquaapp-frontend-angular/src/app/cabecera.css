@@ -1,0 +1,20 @@
+.barra {
+  gap: 4px;
+  padding: 0 8px;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+}
+
+.marca {
+  margin-right: 8px;
+}
+
+.relleno {
+  flex: 1 1 auto;
+}
+
+/* En pantallas estrechas los menús se quedan solo con el icono (llevan aria-label). */
+@media (max-width: 599px) {
+  .texto-menu {
+    display: none;
+  }
+}

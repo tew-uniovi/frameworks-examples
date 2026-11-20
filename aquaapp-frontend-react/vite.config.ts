@@ -20,7 +20,7 @@ export default defineConfig(({ mode }) => {
         '/auth': {
           target: auth,
           changeOrigin: true,
-          rewrite: (ruta) => ruta.replace(/^\/auth/, ''),
+          rewrite: (ruta: string) => ruta.replace(/^\/auth/, ''),
         },
       },
     },

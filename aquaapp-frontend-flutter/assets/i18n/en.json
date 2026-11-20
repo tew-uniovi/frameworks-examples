@@ -46,5 +46,9 @@
   "nav.embalses": "Reservoirs",
   "nav.cuenta": "Account",
   "tabla.editar": "Edit",
-  "tabla.eliminar": "Delete"
+  "tabla.eliminar": "Delete",
+  "error.sinPermiso": "You do not have permission for this action",
+  "error.generico": "An error occurred while contacting the server",
+  "validacion.obligatorio": "Required field",
+  "validacion.numero": "Enter a valid number (0 or greater)"
 }

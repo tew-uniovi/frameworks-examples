@@ -71,8 +71,8 @@ export class EmbalseService {
     this.pagina.set(0); // el filtro puede dejar menos páginas: se vuelve a la primera
   }
 
-  irAPagina(delta: number): void {
-    this.pagina.update((p) => Math.min(Math.max(p + delta, 0), this.totalPaginas() - 1));
+  ponerPagina(indice: number): void {
+    this.pagina.set(Math.min(Math.max(indice, 0), this.totalPaginas() - 1));
   }
 
   /** Olvida los datos (al cerrar sesión o perderla). */

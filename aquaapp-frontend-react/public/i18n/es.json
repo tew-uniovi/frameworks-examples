@@ -46,5 +46,7 @@
   "nav.embalses": "Embalses",
   "nav.cuenta": "Cuenta",
   "tabla.editar": "Editar",
-  "tabla.eliminar": "Eliminar"
+  "tabla.eliminar": "Eliminar",
+  "error.sinPermiso": "No tienes permiso para esta acción",
+  "error.servidor": "No se pudo completar la operación. Inténtalo de nuevo."
 }

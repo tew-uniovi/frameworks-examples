@@ -46,5 +46,9 @@
   "nav.embalses": "Embalses",
   "nav.cuenta": "Cuenta",
   "tabla.editar": "Editar",
-  "tabla.eliminar": "Eliminar"
+  "tabla.eliminar": "Eliminar",
+  "error.sinPermiso": "No tienes permiso para esta acción",
+  "error.generico": "Se ha producido un error al comunicarse con el servidor",
+  "validacion.obligatorio": "Campo obligatorio",
+  "validacion.numero": "Introduce un número válido (0 o mayor)"
 }
