@@ -51,7 +51,7 @@ export function BarraNavegacion({ onListado, onAlta, onLogin, onRegistro, onLogo
             ...theme.applyStyles('dark', { bgcolor: 'common.white' }),
           })}
         >
-          <Box component="img" src={logo} alt="aquaapp" sx={{ height: (theme) => theme.spacing(5) }} />
+          <Box component="img" src={logo} alt="aquaapp" fetchPriority="high" sx={{ height: (theme) => theme.spacing(5) }} />
         </Box>
 
         <Box sx={{ flexGrow: 1, display: 'flex' }}>

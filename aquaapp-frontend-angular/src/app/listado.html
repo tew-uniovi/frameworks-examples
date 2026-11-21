@@ -40,7 +40,7 @@
         />
       </div>
     } @else {
-      <div class="tabla-contenedor">
+      <div class="tabla-contenedor" role="region" tabindex="0" [attr.aria-label]="i18n.t('nav.embalses')">
         <table mat-table [dataSource]="embalses.paginaActual()" id="tabla-embalses" data-testid="listado-tabla">
           <ng-container matColumnDef="id">
             <th mat-header-cell *matHeaderCellDef>{{ i18n.t('tabla.id') }}</th>

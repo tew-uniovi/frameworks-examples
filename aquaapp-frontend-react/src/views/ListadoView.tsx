@@ -82,7 +82,7 @@ export function ListadoView({
 
       <Paper variant="outlined">
         {cargando && <LinearProgress />}
-        <TableContainer data-testid="listado-tabla">
+        <TableContainer data-testid="listado-tabla" role="region" tabIndex={0} aria-label={t('nav.embalses')}>
         <Table size="small">
           <TableHead>
             <TableRow sx={{ bgcolor: 'action.hover' }}>
